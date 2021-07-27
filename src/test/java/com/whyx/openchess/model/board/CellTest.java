@@ -27,10 +27,18 @@ public class CellTest {
     @Nested
     class Preconditions {
 
+        private Cell.CellBuilder builder;
+
+        @BeforeEach
+        void setup() {
+            builder = Cell.builder();
+            assumeThat(builder).isNotNull();
+        }
+
         @Test
         void cellStateMustNotBeNullTest() {
             assertThatNullPointerException()
-                    .isThrownBy(() -> Cell.builder()
+                    .isThrownBy(() -> builder
                             .withCellState(null)
                     ).withMessage("cellState must not be null");
         }
@@ -38,7 +46,7 @@ public class CellTest {
         @Test
         void cellStateMustBePresentTest() {
             assertThatNullPointerException()
-                    .isThrownBy(() -> Cell.builder()
+                    .isThrownBy(() -> builder
                             .withCellState(null)
                             .withXSupplier(() -> DEFAULT_X)
                             .withYSupplier(() -> DEFAULT_Y)
@@ -49,7 +57,7 @@ public class CellTest {
         @Test
         void xSupplierMustNotBeNullTest() {
             assertThatNullPointerException()
-                    .isThrownBy(() -> Cell.builder()
+                    .isThrownBy(() -> builder
                             .withXSupplier(null)
                     ).withMessage("xSupplier must not be null");
         }
@@ -57,7 +65,7 @@ public class CellTest {
         @Test
         void xSupplierMustBePresentTest(@Mock final ICellState cellState) {
             assertThatNullPointerException()
-                    .isThrownBy(() -> Cell.builder()
+                    .isThrownBy(() -> builder
                             .withCellState(cellState)
                             .withXSupplier(null)
                             .withYSupplier(() -> DEFAULT_Y)
@@ -67,7 +75,7 @@ public class CellTest {
         @Test
         void ySupplierMustNotBeNullTest() {
             assertThatNullPointerException()
-                    .isThrownBy(() -> Cell.builder()
+                    .isThrownBy(() -> builder
                             .withYSupplier(null)
                     ).withMessage("ySupplier must not be null");
         }
@@ -75,7 +83,7 @@ public class CellTest {
         @Test
         void ySupplierMustBePresentTest(@Mock final ICellState cellState) {
             assertThatNullPointerException()
-                    .isThrownBy(() -> Cell.builder()
+                    .isThrownBy(() -> builder
                             .withCellState(cellState)
                             .withXSupplier(() -> DEFAULT_X)
                             .withYSupplier(null)
@@ -105,7 +113,12 @@ public class CellTest {
         }
 
         @Test
-        void getCellNotNullTest() {
+        void builderNotNullTest() {
+            assertThat(Cell.builder()).isNotNull();
+        }
+
+        @Test
+        void getCellStateNotNullTest() {
             assertThat(cell.getState()).isNotNull();
         }
 
