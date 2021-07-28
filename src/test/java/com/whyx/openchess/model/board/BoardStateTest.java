@@ -1,7 +1,8 @@
 package com.whyx.openchess.model.board;
 
-import com.whyx.openchessinterface.model.board.IBoard;
 import com.whyx.openchessinterface.model.board.IBoardState;
+import com.whyx.openchessinterface.model.board.ICell;
+import com.whyx.whyxcommons.collections.ImmutableList;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -15,36 +16,36 @@ import static org.assertj.core.api.Assumptions.assumeThat;
 
 /**
  * @author Sam Wykes.
- * Class used to test the {@link Board} class.
+ * Class used to test the {@link BoardState} class.
  */
 @ExtendWith(MockitoExtension.class)
-public class BoardTest {
+public class BoardStateTest {
 
     @Nested
     class Preconditions {
 
-        private Board.BoardBuilder builder;
+        private BoardState.BoardStateBuilder builder;
 
         @BeforeEach
         void setup() {
-            builder = Board.builder();
+            builder = BoardState.builder();
             assumeThat(builder).isNotNull();
         }
 
         @Test
-        void boardStateMustNotBeNullTest() {
+        void cellsMustNotBeNullTest() {
             assertThatNullPointerException()
                     .isThrownBy(() -> builder
-                            .withBoardState(null))
-                    .withMessage("boardState must not be null");
+                            .withCells(null))
+                    .withMessage("cells must not be null");
         }
 
         @Test
-        void boardStateMustBePresentTest() {
+        void cellsMustBePresentTest() {
             assertThatNullPointerException()
                     .isThrownBy(() -> builder
                             .build())
-                    .withMessage("boardState must not be null");
+                    .withMessage("cells must not be null");
         }
 
     }
@@ -52,28 +53,36 @@ public class BoardTest {
     @Nested
     class Build {
 
-        private IBoard board;
+        private IBoardState boardState;
 
         @Mock
-        private IBoardState boardState;
+        private ImmutableList<ImmutableList<ICell>> cells;
 
         @BeforeEach
         void setup() {
-            board = Board.builder()
-                    .withBoardState(boardState)
+            boardState = BoardState.builder()
+                    .withCells(cells)
                     .build();
-            // assume that board builds correctly.
-            assumeThat(board).isNotNull();
         }
 
         @Test
-        void boardStateNotNullTest() {
-            assertThat(board.getState()).isNotNull();
+        void builderMustNotBeNullTest() {
+            assertThat(BoardState.builder()).isNotNull();
         }
 
         @Test
-        void getBoardStateTest() {
-            assertThat(board.getState()).isSameAs(boardState);
+        void boardStateMustNotBeNullTest() {
+            assertThat(boardState).isNotNull();
+        }
+
+        @Test
+        void cellsMustNotBeNullTest() {
+            assertThat(boardState.getCells()).isNotNull();
+        }
+
+        @Test
+        void getCellsTest() {
+            assertThat(boardState.getCells()).isSameAs(cells);
         }
 
     }
