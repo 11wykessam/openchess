@@ -66,7 +66,7 @@ public class Cell implements ICell {
     /**
      * Builder class for {@link Cell}.
      */
-    public static class CellBuilder implements Builder<ICell> {
+    static class CellBuilder implements Builder<ICell> {
 
         private ICellState cellState;
         private Supplier<Integer> xSupplier;

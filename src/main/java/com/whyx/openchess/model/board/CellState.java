@@ -34,7 +34,7 @@ public class CellState implements ICellState {
      *
      * @return {@link CellStateBuilder} object.
      */
-    public static CellStateBuilder builder() {
+    static CellStateBuilder builder() {
         return new CellStateBuilder();
     }
 

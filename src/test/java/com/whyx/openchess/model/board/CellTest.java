@@ -47,7 +47,6 @@ public class CellTest {
         void cellStateMustBePresentTest() {
             assertThatNullPointerException()
                     .isThrownBy(() -> builder
-                            .withCellState(null)
                             .withXSupplier(() -> DEFAULT_X)
                             .withYSupplier(() -> DEFAULT_Y)
                             .build()
@@ -67,7 +66,6 @@ public class CellTest {
             assertThatNullPointerException()
                     .isThrownBy(() -> builder
                             .withCellState(cellState)
-                            .withXSupplier(null)
                             .withYSupplier(() -> DEFAULT_Y)
                             .build()).withMessage("xSupplier must not be null");
         }
@@ -86,7 +84,6 @@ public class CellTest {
                     .isThrownBy(() -> builder
                             .withCellState(cellState)
                             .withXSupplier(() -> DEFAULT_X)
-                            .withYSupplier(null)
                             .build()).withMessage("ySupplier must not be null");
         }
 
