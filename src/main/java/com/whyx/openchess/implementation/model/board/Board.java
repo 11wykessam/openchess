@@ -14,7 +14,7 @@ public class Board implements IBoard {
 
     private final IBoardState boardState;
 
-    public Board(BoardBuilder builder) {
+    private Board(BoardBuilder builder) {
         this.boardState = builder.boardState;
     }
 
