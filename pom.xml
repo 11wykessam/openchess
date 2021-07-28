@@ -86,15 +86,24 @@
                     </excludes>
                 </configuration>
             </plugin>
-        </plugins>
-    </build>
+		</plugins>
+	</build>
 
-    <distributionManagement>
-        <repository>
-            <id>github</id>
-            <name>GitHub Packages</name>
-            <url>https://maven.pkg.github.com/11wykessam/openchess</url>
-        </repository>
-    </distributionManagement>
+	<distributionManagement>
+		<repository>
+			<id>github</id>
+			<name>GitHub Packages</name>
+			<url>https://maven.pkg.github.com/11wykessam/openchess</url>
+		</repository>
+	</distributionManagement>
+
+	<repositories>
+		<repository>
+			<id>github</id>
+			<name>GitHub Packages</name>
+			<url>https://maven.pkg.github.com/11wykessam/*</url>
+		</repository>
+	</repositories>
+
 
 </project>
