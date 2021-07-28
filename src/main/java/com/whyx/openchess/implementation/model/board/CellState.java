@@ -1,7 +1,7 @@
-package com.whyx.openchess.model.board;
+package com.whyx.openchess.implementation.model.board;
 
-import com.whyx.openchessinterface.model.board.ICellState;
-import com.whyx.openchessinterface.model.piece.IPiece;
+import com.whyx.openchess.interfaces.model.board.ICellState;
+import com.whyx.openchess.interfaces.model.piece.IPiece;
 
 import java.util.Optional;
 
@@ -34,7 +34,7 @@ public class CellState implements ICellState {
      *
      * @return {@link CellStateBuilder} object.
      */
-    public static CellStateBuilder builder() {
+    static CellStateBuilder builder() {
         return new CellStateBuilder();
     }
 

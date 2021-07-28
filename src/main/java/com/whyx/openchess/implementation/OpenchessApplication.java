@@ -1,4 +1,4 @@
-package com.whyx.openchess;
+package com.whyx.openchess.implementation;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
