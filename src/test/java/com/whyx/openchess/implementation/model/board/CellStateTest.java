@@ -1,6 +1,6 @@
-package com.whyx.openchess.model.board;
+package com.whyx.openchess.implementation.model.board;
 
-import com.whyx.openchessinterface.model.piece.IPiece;
+import com.whyx.openchess.interfaces.model.piece.IPiece;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;

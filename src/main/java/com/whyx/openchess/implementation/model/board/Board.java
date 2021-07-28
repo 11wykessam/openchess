@@ -1,8 +1,8 @@
-package com.whyx.openchess.model.board;
+package com.whyx.openchess.implementation.model.board;
 
-import com.whyx.openchessinterface.common.Builder;
-import com.whyx.openchessinterface.model.board.IBoard;
-import com.whyx.openchessinterface.model.board.IBoardState;
+import com.whyx.openchess.interfaces.common.Builder;
+import com.whyx.openchess.interfaces.model.board.IBoard;
+import com.whyx.openchess.interfaces.model.board.IBoardState;
 
 import static java.util.Objects.requireNonNull;
 

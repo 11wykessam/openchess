@@ -1,7 +1,7 @@
-package com.whyx.openchess.model.board;
+package com.whyx.openchess.implementation.model.board;
 
-import com.whyx.openchessinterface.model.board.ICell;
-import com.whyx.openchessinterface.model.board.ICellState;
+import com.whyx.openchess.interfaces.model.board.ICell;
+import com.whyx.openchess.interfaces.model.board.ICellState;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
