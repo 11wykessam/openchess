@@ -18,7 +18,7 @@ public class Cell implements ICell {
     private final int x;
     private final int y;
 
-    public Cell(CellBuilder builder) {
+    private Cell(CellBuilder builder) {
         this.cellState = builder.cellState;
         this.x = builder.xSupplier.get();
         this.y = builder.ySupplier.get();

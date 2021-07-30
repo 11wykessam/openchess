@@ -31,7 +31,7 @@ public class CellStateTest {
         }
 
         @Test
-        void pieceMustNotBeNullTest() {
+        void pieceNotNullTest() {
             assertThatNullPointerException()
                     .isThrownBy(() -> cellStateBuilder
                             .withPiece(null))
@@ -62,6 +62,14 @@ public class CellStateTest {
                     .withPiece(piece)
                     .build();
             assertThat(cellState.getPiece()).isNotNull();
+        }
+
+        @Test
+        void getPieceIsPresentOptionalNotEmptyTest(@Mock final IPiece piece) {
+            CellState cellState = CellState.builder()
+                    .withPiece(piece)
+                    .build();
+            assertThat(cellState.getPiece().isEmpty()).isFalse();
         }
 
         @Test

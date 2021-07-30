@@ -33,7 +33,7 @@ public class BoardStateTest {
         }
 
         @Test
-        void cellsMustNotBeNullTest() {
+        void cellsNotNullTest() {
             assertThatNullPointerException()
                     .isThrownBy(() -> builder
                             .withCells(null))
@@ -66,17 +66,17 @@ public class BoardStateTest {
         }
 
         @Test
-        void builderMustNotBeNullTest() {
+        void builderNotNullTest() {
             assertThat(BoardState.builder()).isNotNull();
         }
 
         @Test
-        void boardStateMustNotBeNullTest() {
+        void boardStateNotNullTest() {
             assertThat(boardState).isNotNull();
         }
 
         @Test
-        void cellsMustNotBeNullTest() {
+        void cellsNotNullTest() {
             assertThat(boardState.getCells()).isNotNull();
         }
 

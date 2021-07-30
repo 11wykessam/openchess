@@ -15,7 +15,7 @@ public class CellState implements ICellState {
 
     private final IPiece piece;
 
-    public CellState(CellStateBuilder cellStateBuilder) {
+    private CellState(CellStateBuilder cellStateBuilder) {
         this.piece = cellStateBuilder.piece;
     }
 

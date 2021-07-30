@@ -15,7 +15,7 @@ public class BoardState implements IBoardState {
 
     private final ImmutableList<ImmutableList<ICell>> cells;
 
-    public BoardState(BoardStateBuilder builder) {
+    private BoardState(BoardStateBuilder builder) {
         this.cells = builder.cells;
     }
 

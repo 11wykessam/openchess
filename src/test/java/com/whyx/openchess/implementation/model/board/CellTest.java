@@ -36,7 +36,7 @@ public class CellTest {
         }
 
         @Test
-        void cellStateMustNotBeNullTest() {
+        void cellStateNotNullTest() {
             assertThatNullPointerException()
                     .isThrownBy(() -> builder
                             .withCellState(null)
@@ -54,7 +54,7 @@ public class CellTest {
         }
 
         @Test
-        void xSupplierMustNotBeNullTest() {
+        void xSupplierNotNullTest() {
             assertThatNullPointerException()
                     .isThrownBy(() -> builder
                             .withXSupplier(null)
@@ -71,7 +71,7 @@ public class CellTest {
         }
 
         @Test
-        void ySupplierMustNotBeNullTest() {
+        void ySupplierNotNullTest() {
             assertThatNullPointerException()
                     .isThrownBy(() -> builder
                             .withYSupplier(null)

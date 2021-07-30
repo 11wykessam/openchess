@@ -32,7 +32,7 @@ public class BoardTest {
         }
 
         @Test
-        void boardStateMustNotBeNullTest() {
+        void boardStateNotNullTest() {
             assertThatNullPointerException()
                     .isThrownBy(() -> builder
                             .withBoardState(null))

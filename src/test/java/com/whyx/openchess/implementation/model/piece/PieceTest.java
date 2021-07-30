@@ -16,6 +16,7 @@ import static org.assertj.core.api.Assumptions.assumeThat;
 
 /**
  * @author Sam Wykes.
+ * Class used to test the {@link Piece} class.
  */
 @ExtendWith(MockitoExtension.class)
 public class PieceTest {
@@ -34,7 +35,7 @@ public class PieceTest {
         }
 
         @Test
-        void stateMustNotBeNullTest() {
+        void stateNotNullTest() {
             assertThatNullPointerException()
                     .isThrownBy(() -> builder
                             .withState(null))
@@ -51,7 +52,7 @@ public class PieceTest {
         }
 
         @Test
-        void colourMustNotBeNullTest() {
+        void colourNotNullTest() {
             assertThatNullPointerException()
                     .isThrownBy(() -> builder
                             .withColour(null))

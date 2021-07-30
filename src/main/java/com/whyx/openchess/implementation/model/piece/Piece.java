@@ -16,7 +16,7 @@ public class Piece implements IPiece {
     private final IPieceState state;
     private final PieceColour colour;
 
-    public Piece(PieceBuilder builder) {
+    private Piece(PieceBuilder builder) {
         this.state = builder.state;
         this.colour = builder.colour;
     }
