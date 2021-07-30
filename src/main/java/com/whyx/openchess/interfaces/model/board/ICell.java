@@ -1,27 +1,34 @@
 package com.whyx.openchess.interfaces.model.board;
 
+import com.whyx.openchess.interfaces.model.piece.IPiece;
+
+import java.util.Optional;
+
 /**
- * @author Sam Wykes
- * Interface representing a cell on a chess board.
+ * @author Sam Wykes.
+ * Interface representing a cell in chess.
  */
 public interface ICell {
 
     /**
-     * Get the state of the cell.
-     * @return {@link ICellState} object.
-     */
-    ICellState getState();
-
-    /**
-     * Get the x coordinate of the cell.
-     * @return int representing x coordinate of the cell.
+     * The x coordinate of the cell.
+     *
+     * @return int.
      */
     int getX();
 
     /**
-     * Get the y coordinate of the cell.
-     * @return int representing y coordinate of the cell.
+     * The y coordinate of the cell.
+     *
+     * @return int.
      */
     int getY();
+
+    /**
+     * The chess piece currently in the cell.
+     *
+     * @return {@link IPiece} object.
+     */
+    Optional<IPiece> getPiece();
 
 }

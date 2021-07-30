@@ -1,37 +1,28 @@
 package com.whyx.openchess.implementation.model.board;
 
-import com.whyx.openchess.interfaces.common.Builder;
 import com.whyx.openchess.interfaces.model.board.ICell;
-import com.whyx.openchess.interfaces.model.board.ICellState;
+import com.whyx.openchess.interfaces.model.board.ICellBuilder;
+import com.whyx.openchess.interfaces.model.piece.IPiece;
 
+import java.util.Optional;
 import java.util.function.Supplier;
 
 import static java.util.Objects.requireNonNull;
 
 /**
- * @author Sam Wykes
- * Class representing a cell in chess.
+ * @author Sam Wykes.
+ * Class that represents a cell on a board in a game of chess.
  */
 public class Cell implements ICell {
 
-    private final ICellState cellState;
     private final int x;
     private final int y;
+    private final IPiece piece;
 
-    private Cell(CellBuilder builder) {
-        this.cellState = builder.cellState;
-        this.x = builder.xSupplier.get();
-        this.y = builder.ySupplier.get();
-    }
-
-    /**
-     * Getter for cellState.
-     *
-     * @return The {@link CellState} of the cell.
-     */
-    @Override
-    public ICellState getState() {
-        return this.cellState;
+    public Cell(CellBuilder builder) {
+        this.x = builder.x;
+        this.y = builder.y;
+        this.piece = builder.piece;
     }
 
     /**
@@ -46,7 +37,6 @@ public class Cell implements ICell {
 
     /**
      * Getter for y.
-     *
      * @return int.
      */
     @Override
@@ -55,46 +45,82 @@ public class Cell implements ICell {
     }
 
     /**
-     * Return a builder object.
+     * Getter for piece.
      *
-     * @return {@link Builder} object.
+     * @return {@link Optional} that may contain {@link IPiece} object.
      */
-    public static CellBuilder builder() {
+    @Override
+    public Optional<IPiece> getPiece() {
+        return Optional.ofNullable(piece);
+    }
+
+    /**
+     * Generate instance of builder.
+     *
+     * @return {@link ICellBuilder} object.
+     */
+    public static ICellBuilder builder() {
         return new CellBuilder();
     }
 
     /**
-     * Builder class for {@link Cell}.
+     * @author Sam Wykes.
+     * Builder class responsible for generating instances of {@link Cell}.
      */
-    static class CellBuilder implements Builder<ICell> {
+    public static class CellBuilder implements ICellBuilder {
 
-        private ICellState cellState;
-        private Supplier<Integer> xSupplier;
-        private Supplier<Integer> ySupplier;
+        private int x;
+        private int y;
+        private IPiece piece;
 
-        public Cell build() {
-            requireNonNull(cellState, "cellState must not be null");
-            requireNonNull(xSupplier, "xSupplier must not be null");
-            requireNonNull(ySupplier, "ySupplier must not be null");
+        /**
+         * Build the instance.
+         *
+         * @return {@link ICell} object.
+         */
+        @Override
+        public ICell build() {
             return new Cell(this);
         }
 
-        public CellBuilder withCellState(ICellState cellState) {
-            requireNonNull(cellState, "cellState must not be null");
-            this.cellState = cellState;
-            return this;
-        }
-
-        public CellBuilder withXSupplier(Supplier<Integer> xSupplier) {
+        /**
+         * Provide the builder with x coordinate for the cell.
+         *
+         * @param xSupplier {@link Supplier} object responsible for providing the x coordinate.
+         * @return {@link ICellBuilder} object.
+         */
+        @Override
+        public ICellBuilder withX(Supplier<Integer> xSupplier) {
             requireNonNull(xSupplier, "xSupplier must not be null");
-            this.xSupplier = xSupplier;
+            this.x = xSupplier.get();
             return this;
         }
 
-        public CellBuilder withYSupplier(Supplier<Integer> ySupplier) {
+        /**
+         * Provide the builder with y coordinate for the cell.
+         *
+         * @param ySupplier {@link Supplier} object responsible for providing the y coordinate.
+         * @return {@link ICellBuilder} object.
+         */
+        @Override
+        public ICellBuilder withY(Supplier<Integer> ySupplier) {
             requireNonNull(ySupplier, "ySupplier must not be null");
-            this.ySupplier = ySupplier;
+            this.y = ySupplier.get();
+            return this;
+        }
+
+        /**
+         * Provide the builder with an {@link IPiece} object.
+         *
+         * @param piece The {@link IPiece} object being placed in the cell.
+         * @return {@link ICellBuilder} object.
+         */
+        @Override
+        public ICellBuilder withPiece(IPiece piece) {
+            requireNonNull(piece, "piece must not be null");
+            this.piece = piece;
             return this;
         }
     }
+
 }
