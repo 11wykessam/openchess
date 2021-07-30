@@ -62,8 +62,16 @@ public class BoardTest {
             board = Board.builder()
                     .withBoardState(boardState)
                     .build();
-            // assume that board builds correctly.
-            assumeThat(board).isNotNull();
+        }
+
+        @Test
+        void builderNotNullTest() {
+            assertThat(Board.builder()).isNotNull();
+        }
+
+        @Test
+        void boardNotNullTest() {
+            assertThat(board).isNotNull();
         }
 
         @Test

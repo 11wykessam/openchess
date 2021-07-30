@@ -105,13 +105,16 @@ public class CellTest {
                     .withXSupplier(() -> DEFAULT_X)
                     .withYSupplier(() -> DEFAULT_Y)
                     .build();
-            // assume that cell builds correctly.
-            assumeThat(cell).isNotNull();
         }
 
         @Test
         void builderNotNullTest() {
             assertThat(Cell.builder()).isNotNull();
+        }
+
+        @Test
+        void cellNotNullTest() {
+            assertThat(cell).isNotNull();
         }
 
         @Test
