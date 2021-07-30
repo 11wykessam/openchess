@@ -11,12 +11,12 @@ import static java.util.Objects.requireNonNull;
  * @author Sam Wykes.
  * Class used to represent
  */
-public class Piece implements IPiece {
+public abstract class Piece implements IPiece {
 
     private final IPieceState state;
     private final PieceColour colour;
 
-    private Piece(PieceBuilder builder) {
+    protected Piece(PieceBuilder builder) {
         this.state = builder.state;
         this.colour = builder.colour;
     }
@@ -42,28 +42,12 @@ public class Piece implements IPiece {
     }
 
     /**
-     * Get instance of builder.
-     *
-     * @return {@link PieceBuilder} object.
-     */
-    public static PieceBuilder builder() {
-        return new PieceBuilder();
-    }
-
-    /**
      * Builder responsible for building {@link Piece} class.
      */
-    static class PieceBuilder implements Builder<IPiece> {
+    static abstract class PieceBuilder implements Builder<IPiece> {
 
-        private IPieceState state;
-        private PieceColour colour;
-
-        @Override
-        public IPiece build() {
-            requireNonNull(state, "state must not be null");
-            requireNonNull(colour, "colour must not be null");
-            return new Piece(this);
-        }
+        protected IPieceState state;
+        protected PieceColour colour;
 
         public PieceBuilder withState(IPieceState state) {
             requireNonNull(state, "state must not be null");

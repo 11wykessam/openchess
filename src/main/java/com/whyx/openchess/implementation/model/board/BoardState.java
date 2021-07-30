@@ -1,5 +1,6 @@
 package com.whyx.openchess.implementation.model.board;
 
+import com.whyx.openchess.implementation.exceptions.InvalidBoardDimensionsException;
 import com.whyx.openchess.interfaces.common.Builder;
 import com.whyx.openchess.interfaces.model.board.IBoardState;
 import com.whyx.openchess.interfaces.model.board.ICell;
@@ -53,6 +54,14 @@ public class BoardState implements IBoardState {
 
         public BoardStateBuilder withCells(ImmutableList<ImmutableList<ICell>> cells) {
             requireNonNull(cells, "cells must not be null");
+
+            // check that the cells form a rectangle.
+            if (cells.size() == 0) throw new InvalidBoardDimensionsException();
+            for (int i = 1; i < cells.size(); i++) {
+                if (cells.get(i).size() != cells.get(i - 1).size() || cells.get(i).size() == 0)
+                    throw new InvalidBoardDimensionsException();
+            }
+
             this.cells = cells;
             return this;
         }

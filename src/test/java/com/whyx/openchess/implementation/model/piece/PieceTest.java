@@ -19,9 +19,11 @@ import static org.assertj.core.api.Assumptions.assumeThat;
  * Class used to test the {@link Piece} class.
  */
 @ExtendWith(MockitoExtension.class)
-public class PieceTest {
+public abstract class PieceTest {
 
     private static final PieceColour DEFAULT_COLOUR = PieceColour.BLACK;
+
+    abstract Piece.PieceBuilder createBuilder();
 
     @Nested
     class Preconditions {
@@ -30,7 +32,7 @@ public class PieceTest {
 
         @BeforeEach
         void setup() {
-            builder = Piece.builder();
+            builder = createBuilder();
             assumeThat(builder).isNotNull();
         }
 
@@ -80,7 +82,7 @@ public class PieceTest {
 
         @BeforeEach
         void setup() {
-            piece = Piece.builder()
+            piece = createBuilder()
                     .withState(pieceState)
                     .withColour(DEFAULT_COLOUR)
                     .build();
@@ -88,7 +90,7 @@ public class PieceTest {
 
         @Test
         void builderNotNullTest() {
-            assertThat(Piece.builder()).isNotNull();
+            assertThat(createBuilder()).isNotNull();
         }
 
         @Test
