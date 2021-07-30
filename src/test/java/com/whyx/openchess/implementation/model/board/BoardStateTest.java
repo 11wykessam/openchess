@@ -22,7 +22,7 @@ import static org.assertj.core.api.Assumptions.assumeThat;
 public class BoardStateTest {
 
     @Nested
-    class Preconditions {
+    class PreconditionTests {
 
         private BoardState.BoardStateBuilder builder;
 
@@ -51,7 +51,7 @@ public class BoardStateTest {
     }
 
     @Nested
-    class Build {
+    class BuildTests {
 
         private IBoardState boardState;
 
