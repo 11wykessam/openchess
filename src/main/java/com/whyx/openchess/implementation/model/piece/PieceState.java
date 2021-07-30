@@ -30,6 +30,11 @@ public class PieceState implements IPieceState {
         return Optional.ofNullable(cell);
     }
 
+    /**
+     * Create an instance of builder.
+     *
+     * @return {@link PieceStateBuilder} object.
+     */
     public static PieceStateBuilder builder() {
         return new PieceStateBuilder();
     }
