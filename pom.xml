@@ -23,7 +23,7 @@
         <dependency>
             <groupId>com.whyx</groupId>
             <artifactId>whyx-commons</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <version>1.0.0</version>
         </dependency>
 
         <!-- External Dependencies-->
