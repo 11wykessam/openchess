@@ -19,14 +19,16 @@ import static org.assertj.core.api.Assertions.assertThatNullPointerException;
 @ExtendWith(MockitoExtension.class)
 public class CellTest extends ICellContract {
 
+    // final attributes.
     private static final int X = 1;
     private static final int Y = 1;
 
+    // mock attributes.
     @Mock
     private IPiece piece;
 
     /**
-     * Check input parameters are correctly checked for preconditons.
+     * Check input parameters are correctly checked for preconditions.
      */
     @Nested
     class Preconditions {
