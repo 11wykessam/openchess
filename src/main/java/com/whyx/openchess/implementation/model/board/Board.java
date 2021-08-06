@@ -1,9 +1,14 @@
 package com.whyx.openchess.implementation.model.board;
 
+import com.whyx.openchess.implementation.exceptions.CellOutOfBoundsException;
 import com.whyx.openchess.interfaces.common.Builder;
 import com.whyx.openchess.interfaces.model.board.IBoard;
 import com.whyx.openchess.interfaces.model.board.ICell;
+import com.whyx.openchess.interfaces.model.piece.IPiece;
 import com.whyx.whyxcommons.collections.ImmutableList;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 import static java.util.Objects.requireNonNull;
 
@@ -15,7 +20,7 @@ public class Board implements IBoard {
 
     private final ImmutableList<ImmutableList<ICell>> cells;
 
-    public Board(BoardBuilder boardBuilder) {
+    private Board(BoardBuilder boardBuilder) {
         this.cells = boardBuilder.cells;
     }
 
@@ -27,6 +32,64 @@ public class Board implements IBoard {
     @Override
     public ImmutableList<ImmutableList<ICell>> getCells() {
         return this.cells;
+    }
+
+    /**
+     * Get the width of the board.
+     *
+     * @return int.
+     */
+    @Override
+    public int getWidth() {
+        return cells.size();
+    }
+
+    /**
+     * Get the height of the board.
+     *
+     * @return int.
+     */
+    @Override
+    public int getHeight() {
+        return cells.get(0).size();
+    }
+
+    /**
+     * Place a piece on the board.
+     *
+     * @param x     x coordinate of cell the piece is being placed on.
+     * @param y     y coordinate of cell the piece is being placed on.
+     * @param piece {@link IPiece} being placed.
+     * @return newly created {@link IBoard} object.
+     */
+    @Override
+    public IBoard placePiece(final int x, final int y, final IPiece piece) {
+        // do a check on the coordinates.
+        if (x < 0 || x >= this.getWidth() || y < 0 || y >= this.getHeight()) throw new CellOutOfBoundsException();
+
+        // copy the cell list to mutable version.
+        List<ImmutableList<ICell>> mutableColumns = cells.mutableCopy();
+        List<List<ICell>> mutableCells = mutableColumns.stream()
+                .map(ImmutableList::mutableCopy)
+                .collect(Collectors.toList());
+
+        // make the change to the mutable version,
+        ICell cell = Cell.builder()
+                .withX(() -> x)
+                .withY(() -> y)
+                .withPiece(piece)
+                .build();
+        mutableCells.get(x).add(y, cell);
+
+        // convert back to immutable version.
+        ImmutableList<ImmutableList<ICell>> immutableList = ImmutableList.ofList(
+                mutableCells.stream().map(ImmutableList::ofList)
+                        .collect(Collectors.toList())
+        );
+
+        return Board.builder()
+                .withCells(immutableList)
+                .build();
     }
 
     /**

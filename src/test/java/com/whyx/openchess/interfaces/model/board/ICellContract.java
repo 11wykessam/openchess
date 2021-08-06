@@ -12,7 +12,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 public abstract class ICellContract {
 
     /**
-     * Check input parameters are correctly checked for preconditons.
+     * Check input parameters are correctly checked for preconditions.
      */
     @Nested
     class Preconditions {
