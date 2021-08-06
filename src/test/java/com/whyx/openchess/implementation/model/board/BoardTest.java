@@ -14,6 +14,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.List;
+
 import static org.assertj.core.api.Assertions.*;
 
 /**
@@ -28,9 +30,17 @@ public class BoardTest extends IBoardContract {
     private static final int X = 1;
     private static final int Y = 1;
 
+    @Mock
+    private ICell cell;
+
     @Override
     protected IBoardFactory createBoardFactory() {
         return new BoardFactory();
+    }
+
+    private ImmutableList<ImmutableList<ICell>> createEmptyCellsList() {
+        ImmutableList<ICell> column = ImmutableList.ofList(List.of(cell));
+        return ImmutableList.ofList(List.of(column));
     }
 
     /**
@@ -77,17 +87,17 @@ public class BoardTest extends IBoardContract {
         }
 
         @Test
-        void boardNotNullTest(@Mock final ImmutableList<ImmutableList<ICell>> cells) {
+        void boardNotNullTest() {
             IBoard board = Board.builder()
-                    .withCells(cells)
+                    .withCells(createEmptyCellsList())
                     .build();
             assertThat(board).isNotNull();
         }
 
         @Test
-        void getBoardTest(@Mock final ImmutableList<ImmutableList<ICell>> cells) {
+        void getBoardTest() {
             IBoard board = Board.builder()
-                    .withCells(cells)
+                    .withCells(createEmptyCellsList())
                     .build();
             assertThat(board).isSameAs(board);
         }
@@ -107,15 +117,16 @@ public class BoardTest extends IBoardContract {
             }
 
             @Test
-            void cellsNotNullTest(@Mock final ImmutableList<ImmutableList<ICell>> cells) {
+            void cellsNotNullTest() {
                 IBoard board = Board.builder()
-                        .withCells(cells)
+                        .withCells(createEmptyCellsList())
                         .build();
                 assertThat(board.getCells()).isNotNull();
             }
 
             @Test
-            void getCellsTest(@Mock final ImmutableList<ImmutableList<ICell>> cells) {
+            void getCellsTest() {
+                ImmutableList<ImmutableList<ICell>> cells = createEmptyCellsList();
                 IBoard board = Board.builder()
                         .withCells(cells)
                         .build();
