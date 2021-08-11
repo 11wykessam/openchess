@@ -1,6 +1,7 @@
 package com.whyx.openchess.implementation.model.board;
 
 import com.whyx.openchess.implementation.exceptions.CellOutOfBoundsException;
+import com.whyx.openchess.implementation.exceptions.InvalidBoardDimensionException;
 import com.whyx.openchess.interfaces.model.board.IBoard;
 import com.whyx.openchess.interfaces.model.board.IBoardFactory;
 import com.whyx.openchess.interfaces.model.board.ICell;
@@ -81,6 +82,48 @@ public class BoardTest {
 
         @Nested
         class BuilderPreconditions {
+
+            @Test
+            void cellsHasNoColumnsInvalidTest() {
+                assertThatThrownBy(() -> Board.builder()
+                        .withCells(ImmutableList.ofList(new ArrayList<>()))
+                        .build()
+                ).isExactlyInstanceOf(InvalidBoardDimensionException.class);
+            }
+
+            @Test
+            void cellsHasNoRowsInvalidTest() {
+                // create immutable list.
+                ImmutableList<ICell> column = ImmutableList.ofList(new ArrayList<>());
+                List<ImmutableList<ICell>> mutableCells = new ArrayList<>();
+                mutableCells.add(column);
+                ImmutableList<ImmutableList<ICell>> cells = ImmutableList.ofList(mutableCells);
+
+                assertThatThrownBy(() -> Board.builder()
+                        .withCells(cells)
+                        .build())
+                        .isExactlyInstanceOf(InvalidBoardDimensionException.class);
+            }
+
+            @Test
+            void unequalColumnSizeTest(@Mock final ICell cellOne, @Mock final ICell cellTwo) {
+                // create immutable list.
+                List<ICell> smallerColumn = new ArrayList<>();
+                List<ICell> biggerColumn = new ArrayList<>();
+                smallerColumn.add(cellOne);
+                biggerColumn.add(cellOne);
+                biggerColumn.add(cellTwo);
+
+                List<ImmutableList<ICell>> mutableCells = new ArrayList<>();
+                mutableCells.add(ImmutableList.ofList(smallerColumn));
+                mutableCells.add(ImmutableList.ofList(biggerColumn));
+                ImmutableList<ImmutableList<ICell>> cells = ImmutableList.ofList(mutableCells);
+
+                assertThatThrownBy(() -> Board.builder()
+                        .withCells(cells)
+                        .build())
+                        .isExactlyInstanceOf(InvalidBoardDimensionException.class);
+            }
 
             @Test
             void cellsNotNullTest() {
@@ -223,12 +266,18 @@ public class BoardTest {
             }
 
             @Test
-            void containsPieceReturnsFalseTest(@Mock final IPiece piece) {
+            void containsPieceReturnsFalseNoPiecesTest(@Mock final IPiece piece) {
                 assertThat(emptyBoard.containsPiece(piece)).isFalse();
             }
 
             @Test
-            void containsPieceReturnsTrueTest(@Mock final IPiece piece) {
+            void containsPieceReturnsFalseOnePiece(@Mock final IPiece wrongPiece, @Mock final IPiece piece) {
+                IBoard nonEmptyBoard = emptyBoard.placePiece(X, Y, wrongPiece);
+                assertThat(nonEmptyBoard.containsPiece(piece)).isFalse();
+            }
+
+            @Test
+            void containsPieceReturnsTrueOnePieceTest(@Mock final IPiece piece) {
                 IBoard nonEmptyBoard = emptyBoard.placePiece(X, Y, piece);
                 assertThat(nonEmptyBoard.containsPiece(piece)).isTrue();
             }
