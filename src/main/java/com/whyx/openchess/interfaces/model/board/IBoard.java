@@ -31,6 +31,14 @@ public interface IBoard {
     int getHeight();
 
     /**
+     * Checks whether a given {@link IPiece} is on the board.
+     *
+     * @param piece {@link IPiece} being checked for.
+     * @return boolean.
+     */
+    boolean containsPiece(IPiece piece);
+
+    /**
      * Place an {@link IPiece} object on a certain cell on the board.
      *
      * @param x     x coordinate of cell the piece is being placed on.

@@ -60,6 +60,22 @@ public class Board implements IBoard {
     }
 
     /**
+     * Checks whether the board contains a piece.
+     *
+     * @param piece {@link IPiece} being checked for.
+     * @return boolean.
+     */
+    @Override
+    public boolean containsPiece(IPiece piece) {
+        requireNonNull(piece, "piece must not be null");
+        return this.cells.stream()
+                .anyMatch(
+                        column -> column.stream().anyMatch(
+                                cell -> cell.getPiece().isPresent() && cell.getPiece().get().equals(piece))
+                );
+    }
+
+    /**
      * Place a piece on the board.
      *
      * @param x     x coordinate of cell the piece is being placed on.
