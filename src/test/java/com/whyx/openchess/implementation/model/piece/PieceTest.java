@@ -4,7 +4,6 @@ import com.whyx.openchess.implementation.model.piece.Piece.PieceBuilder;
 import com.whyx.openchess.interfaces.model.board.IBoard;
 import com.whyx.openchess.interfaces.model.board.ICell;
 import com.whyx.openchess.interfaces.model.piece.IPiece;
-import com.whyx.openchess.interfaces.model.piece.IPieceContract;
 import com.whyx.openchess.interfaces.model.piece.PieceColour;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
@@ -25,14 +24,21 @@ import static org.mockito.Mockito.when;
  * Class used to test the abstract class {@link Piece}
  */
 @ExtendWith(MockitoExtension.class)
-public abstract class PieceTest extends IPieceContract {
+public abstract class PieceTest {
 
     /**
-     * Generate a {@link PieceBuilder} class to produce {@link Piece} objects to test.
+     * Generate a {@link PieceBuilder} object to produce {@link Piece} objects to test.
      *
      * @return {@link PieceBuilder} object.
      */
     protected abstract PieceBuilder createBuilder();
+
+    /**
+     * Generate a {@link IPiece} object to test.
+     *
+     * @return {@link IPiece} object.
+     */
+    protected abstract IPiece createPiece();
 
     /**
      * Check input parameters are correctly checked for preconditions.
@@ -40,26 +46,65 @@ public abstract class PieceTest extends IPieceContract {
     @Nested
     class Preconditions {
 
-        private PieceBuilder builder;
+        @Nested
+        class BuilderPreconditions {
 
-        @BeforeEach
-        void setup() {
-            builder = createBuilder();
-            assumeThat(builder).isNotNull();
+            private PieceBuilder builder;
+
+            @BeforeEach
+            void setup() {
+                builder = createBuilder();
+                assumeThat(builder).isNotNull();
+            }
+
+            @Test
+            void colourNotNullTest() {
+                assertThatNullPointerException()
+                        .isThrownBy(() -> builder.withColour(null))
+                        .withMessage("colour must not be null");
+            }
+
+            @Test
+            void colourMustBePresentTest() {
+                assertThatNullPointerException()
+                        .isThrownBy(() -> builder.build())
+                        .withMessage("colour must not be null");
+            }
+
         }
 
-        @Test
-        void colourNotNullTest() {
-            assertThatNullPointerException()
-                    .isThrownBy(() -> builder.withColour(null))
-                    .withMessage("colour must not be null");
-        }
+        @Nested
+        class MethodPreconditions {
 
-        @Test
-        void colourMustBePresentTest() {
-            assertThatNullPointerException()
-                    .isThrownBy(() -> builder.build())
-                    .withMessage("colour must not be null");
+            private IPiece piece;
+
+            @BeforeEach
+            void setup() {
+                piece = createPiece();
+                assumeThat(piece).isNotNull();
+            }
+
+            @Test
+            void isMoveLegalBoardNotNullTest(@Mock final ICell start, @Mock final ICell destination) {
+                assertThatNullPointerException()
+                        .isThrownBy(() -> piece.isMoveLegal(null, start, destination))
+                        .withMessage("board must not be null");
+            }
+
+            @Test
+            void isMoveLegalStartNotNullTest(@Mock final IBoard board, @Mock final ICell destination) {
+                assertThatNullPointerException()
+                        .isThrownBy(() -> piece.isMoveLegal(board, null, destination))
+                        .withMessage("start must not be null");
+            }
+
+            @Test
+            void isMoveLegalDestinationNotNullTest(@Mock final IBoard board, @Mock final ICell start) {
+                assertThatNullPointerException()
+                        .isThrownBy(() -> piece.isMoveLegal(board, start, null))
+                        .withMessage("destination must not be null");
+            }
+
         }
 
     }

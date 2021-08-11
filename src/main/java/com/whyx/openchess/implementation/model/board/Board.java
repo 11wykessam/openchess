@@ -7,9 +7,9 @@ import com.whyx.openchess.interfaces.model.board.IBoard;
 import com.whyx.openchess.interfaces.model.board.ICell;
 import com.whyx.openchess.interfaces.model.piece.IPiece;
 import com.whyx.whyxcommons.collections.ImmutableList;
+import com.whyx.whyxcommons.collections.ImmutableListCollector;
 
-import java.util.List;
-import java.util.stream.Collectors;
+import java.util.function.Function;
 
 import static java.util.Objects.requireNonNull;
 
@@ -88,38 +88,27 @@ public class Board implements IBoard {
         // do a check on the coordinates.
         if (x < 0 || x >= this.width || y < 0 || y >= this.height) throw new CellOutOfBoundsException();
 
-        List<List<ICell>> mutableCells = this.mutableCellsCopy();
-
-        // make the change to the mutable version,
-        ICell cell = Cell.builder()
-                .withX(() -> x)
-                .withY(() -> y)
-                .withPiece(piece)
-                .build();
-        mutableCells.get(x).set(y, cell);
-
-        // convert back to immutable version.
-        ImmutableList<ImmutableList<ICell>> immutableList = ImmutableList.ofList(
-                mutableCells.stream().map(ImmutableList::ofList)
-                        .collect(Collectors.toList())
-        );
+        // create new immutable cell list with change made.
+        ImmutableList<ImmutableList<ICell>> cells = this.cells.stream().map(
+                immutableColumn -> immutableColumn.stream()
+                        .map(cellToCellWithPieceConverter(x, y, piece))
+                        .collect(new ImmutableListCollector<>())
+        ).collect(new ImmutableListCollector<>());
 
         return Board.builder()
-                .withCells(immutableList)
+                .withCells(cells)
                 .build();
     }
 
-    /**
-     * Create mutable copy of the 2D cells array.
-     *
-     * @return 2D {@link List}.
-     */
-    private List<List<ICell>> mutableCellsCopy() {
-        // copy the cell list to mutable version.
-        List<ImmutableList<ICell>> mutableColumns = cells.mutableCopy();
-        return mutableColumns.stream()
-                .map(ImmutableList::mutableCopy)
-                .collect(Collectors.toList());
+    private Function<ICell, ICell> cellToCellWithPieceConverter(final int x, final int y, final IPiece piece) {
+        return cell -> {
+            if (cell.getX() == x && cell.getY() == y) return Cell.builder()
+                    .withX(() -> x)
+                    .withY(() -> y)
+                    .withPiece(piece)
+                    .build();
+            else return cell;
+        };
     }
 
     /**

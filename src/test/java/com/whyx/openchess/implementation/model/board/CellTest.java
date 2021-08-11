@@ -1,7 +1,6 @@
 package com.whyx.openchess.implementation.model.board;
 
 import com.whyx.openchess.interfaces.model.board.ICell;
-import com.whyx.openchess.interfaces.model.board.ICellContract;
 import com.whyx.openchess.interfaces.model.piece.IPiece;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -17,7 +16,7 @@ import static org.assertj.core.api.Assertions.assertThatNullPointerException;
  * Class used to test the {@link Cell} class.
  */
 @ExtendWith(MockitoExtension.class)
-public class CellTest extends ICellContract {
+public class CellTest {
 
     // final attributes.
     private static final int X = 1;
