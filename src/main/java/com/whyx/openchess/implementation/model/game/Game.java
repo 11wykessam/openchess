@@ -1,9 +1,11 @@
 package com.whyx.openchess.implementation.model.game;
 
+import com.whyx.openchess.implementation.exceptions.CellNotFoundException;
+import com.whyx.openchess.implementation.exceptions.PieceNotFoundException;
 import com.whyx.openchess.interfaces.model.board.IBoard;
 import com.whyx.openchess.interfaces.model.game.IGame;
 import com.whyx.openchess.interfaces.model.piece.IPiece;
-import com.whyx.openchess.interfaces.rules.IMove;
+import com.whyx.openchess.interfaces.model.rules.IMove;
 
 import static java.util.Objects.requireNonNull;
 
@@ -38,10 +40,15 @@ public class Game implements IGame {
      * @param piece The {@link IPiece} being moved.
      * @param move  The {@link IMove} being made.
      * @return boolean.
+     * @throws PieceNotFoundException thrown if the piece is not in the game.
+     * @throws CellNotFoundException  thrown if either the start or destination cell not in the game.
      */
     @Override
-    public boolean isMoveLegal(final IPiece piece, final IMove move) {
-        return false;
+    public boolean isMoveLegal(final IPiece piece, final IMove move) throws PieceNotFoundException, CellNotFoundException {
+        requireNonNull(piece, "piece must not be null");
+        requireNonNull(move, "move must not be null");
+        return piece.getRuleBook().getRules()
+                .allMatch(rule -> rule.moveConformsToRule(move, piece, this.board));
     }
 
     /**

@@ -1,4 +1,4 @@
-package com.whyx.openchess.interfaces.rules;
+package com.whyx.openchess.interfaces.model.rules;
 
 import com.whyx.openchess.interfaces.model.board.ICell;
 

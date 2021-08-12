@@ -80,21 +80,21 @@ public class BoardTest {
             @Test
             void placePieceCellNotNullTest() {
                 assertThatNullPointerException()
-                        .isThrownBy(() -> board.placeOnCell(null, piece))
+                        .isThrownBy(() -> board.placePieceOnCell(null, piece))
                         .withMessage("targetCell must not be null");
             }
 
             @Test
             void placePiecePieceNotNullTest() {
                 assertThatNullPointerException()
-                        .isThrownBy(() -> board.placeOnCell(cell, null))
+                        .isThrownBy(() -> board.placePieceOnCell(cell, null))
                         .withMessage("piece must not be null");
             }
 
             @Test
             void placePieceCellMustBeOnBoard(@Mock final ICell wrongCell, @Mock final IPiece piece) {
                 assertThatThrownBy(
-                        () -> board.placeOnCell(wrongCell, piece)
+                        () -> board.placePieceOnCell(wrongCell, piece)
                 )
                         .isExactlyInstanceOf(CellNotFoundException.class)
                         .hasMessage("cell not found");
@@ -161,7 +161,7 @@ public class BoardTest {
                     .withCells(Set.of(cellOne, cellTwo))
                     .build();
 
-            final IBoard altered = board.placeOnCell(cellOne, piece);
+            final IBoard altered = board.placePieceOnCell(cellOne, piece);
 
             assertThat(altered).isNotEqualTo(board);
         }
@@ -182,7 +182,7 @@ public class BoardTest {
                     .withCells(Set.of(cellOne, cellTwo))
                     .build();
 
-            final IBoard altered = board.placeOnCell(cellOne, piece);
+            final IBoard altered = board.placePieceOnCell(cellOne, piece);
 
             assertThat(altered).isNotNull();
         }

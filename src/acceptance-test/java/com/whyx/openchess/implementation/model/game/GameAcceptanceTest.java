@@ -7,7 +7,7 @@ import com.whyx.openchess.implementation.model.rules.Move;
 import com.whyx.openchess.interfaces.model.board.IBoard;
 import com.whyx.openchess.interfaces.model.board.ICell;
 import com.whyx.openchess.interfaces.model.game.IGame;
-import com.whyx.openchess.interfaces.rules.IMove;
+import com.whyx.openchess.interfaces.model.rules.IMove;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 

@@ -2,7 +2,7 @@ package com.whyx.openchess.implementation.model.rules;
 
 import com.whyx.openchess.implementation.model.rules.Move.MoveBuilder;
 import com.whyx.openchess.interfaces.model.board.ICell;
-import com.whyx.openchess.interfaces.rules.IMove;
+import com.whyx.openchess.interfaces.model.rules.IMove;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;

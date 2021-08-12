@@ -1,7 +1,7 @@
 package com.whyx.openchess.implementation.model.rules;
 
 import com.whyx.openchess.interfaces.model.board.ICell;
-import com.whyx.openchess.interfaces.rules.IMove;
+import com.whyx.openchess.interfaces.model.rules.IMove;
 
 import static java.util.Objects.requireNonNull;
 
