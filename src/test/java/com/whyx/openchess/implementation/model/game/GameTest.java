@@ -1,5 +1,6 @@
 package com.whyx.openchess.implementation.model.game;
 
+import com.whyx.openchess.implementation.exceptions.CellNotFoundException;
 import com.whyx.openchess.implementation.model.rules.Move;
 import com.whyx.openchess.interfaces.model.board.IBoard;
 import com.whyx.openchess.interfaces.model.board.ICell;
@@ -18,8 +19,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.stream.Stream;
 
 import static com.whyx.openchess.implementation.model.game.Game.GameBuilder;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatNullPointerException;
+import static org.assertj.core.api.Assertions.*;
 import static org.assertj.core.api.Assumptions.assumeThat;
 import static org.mockito.BDDMockito.given;
 
@@ -91,6 +91,45 @@ public class GameTest {
                 assertThatNullPointerException()
                         .isThrownBy(() -> game.isMoveLegal(piece, null))
                         .withMessage("move must not be null");
+            }
+
+            @Test
+            void isMoveLegalStartNotOnBoardTest(
+                    @Mock final IPiece piece,
+                    @Mock final ICell start,
+                    @Mock final IMove move
+            ) {
+                given(move.getStart()).willReturn(start);
+
+                assertThatThrownBy(() -> game.isMoveLegal(piece, move))
+                        .isExactlyInstanceOf(CellNotFoundException.class)
+                        .hasMessage("cell not found");
+            }
+
+            @Test
+            void isMoveLegalDestinationNotOnBoardTest(
+                    @Mock final IPiece piece,
+                    @Mock final ICell start,
+                    @Mock final IMove move
+            ) {
+                given(move.getStart()).willReturn(start);
+
+                assertThatThrownBy(() -> game.isMoveLegal(piece, move))
+                        .isExactlyInstanceOf(CellNotFoundException.class)
+                        .hasMessage("cell not found");
+            }
+
+            @Test
+            void isMoveLegalPieceNotOnStartTest(
+                    @Mock final IPiece piece,
+                    @Mock final ICell start,
+                    @Mock final IMove move
+            ) {
+                given(move.getStart()).willReturn(start);
+
+                assertThatThrownBy(() -> game.isMoveLegal(piece, move))
+                        .isExactlyInstanceOf(CellNotFoundException.class)
+                        .hasMessage("cell not found");
             }
         }
 
