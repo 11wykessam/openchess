@@ -1,51 +1,38 @@
 package com.whyx.openchess.interfaces.model.board;
 
+import com.whyx.openchess.implementation.exceptions.CellNotFoundException;
 import com.whyx.openchess.interfaces.model.piece.IPiece;
-import com.whyx.whyxcommons.collections.ImmutableList;
+import com.whyx.openchess.interfaces.rules.IMove;
+
+import java.util.Iterator;
+import java.util.stream.Stream;
 
 /**
  * @author Sam Wykes.
- * Interface representing a board in a game of chess.
+ * Interface that represents a board in a board game.
  */
 public interface IBoard {
 
     /**
-     * Getter for the cells on the board.
+     * Gets the cells on the board.
      *
-     * @return 2D {@link ImmutableList} containing the cells on the board.
+     * @return {@link Iterator} containing8 {@link ICell} objects.
      */
-    ImmutableList<ImmutableList<ICell>> getCells();
+    Stream<ICell> getCells();
 
     /**
-     * Getter for the width of the board.
+     * Checks whether a given move is legal.
      *
-     * @return int.
+     * @param move The {@link IMove} being made.
+     * @return boolean representing the legality of the move.
      */
-    int getWidth();
+    boolean isMoveObstructed(IMove move);
 
     /**
-     * Getter for the height of the board.
+     * Place a given piece on a cell.
      *
-     * @return int.
+     * @param cell  The {@link ICell} the piece is being placed on.
+     * @param piece The {@link IPiece} being placed.)
      */
-    int getHeight();
-
-    /**
-     * Checks whether a given {@link IPiece} is on the board.
-     *
-     * @param piece {@link IPiece} being checked for.
-     * @return boolean.
-     */
-    boolean containsPiece(IPiece piece);
-
-    /**
-     * Place an {@link IPiece} object on a certain cell on the board.
-     *
-     * @param x     x coordinate of cell the piece is being placed on.
-     * @param y     y coordiante of cell the piece is being placed on.
-     * @param piece {@link IPiece} being placed.
-     * @return {@link IBoard} resulting from the change.
-     */
-    IBoard placePiece(int x, int y, IPiece piece);
-
+    IBoard placeOnCell(ICell cell, IPiece piece) throws CellNotFoundException;
 }

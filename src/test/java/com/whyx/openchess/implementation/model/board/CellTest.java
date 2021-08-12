@@ -1,7 +1,9 @@
 package com.whyx.openchess.implementation.model.board;
 
+import com.whyx.openchess.implementation.model.board.Cell.CellBuilder;
 import com.whyx.openchess.interfaces.model.board.ICell;
 import com.whyx.openchess.interfaces.model.piece.IPiece;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -10,168 +12,90 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatNullPointerException;
+import static org.assertj.core.api.Assumptions.assumeThat;
 
 /**
  * @author Sam Wykes.
  * Class used to test the {@link Cell} class.
  */
 @ExtendWith(MockitoExtension.class)
-public class CellTest {
-
-    // final attributes.
-    private static final int X = 1;
-    private static final int Y = 1;
-
-    // mock attributes.
-    @Mock
-    private IPiece piece;
+class CellTest {
 
     /**
-     * Check input parameters are correctly checked for preconditions.
+     * @author Sam Wykes.
+     * Tests the preconditions of the {@link Cell} class.
      */
     @Nested
     class Preconditions {
 
-        @Test
-        void xSupplierNotNullTest() {
-            assertThatNullPointerException()
-                    .isThrownBy(() -> Cell.builder()
-                            .withX(null))
-                    .withMessage("xSupplier must not be null");
+        @Nested
+        class BuildPreconditions {
+
+            private CellBuilder builder;
+
+            @BeforeEach
+            void setup() {
+                builder = Cell.builder();
+                assumeThat(builder).isNotNull();
+            }
+
+            @Test
+            void pieceNotNullTest() {
+                assertThatNullPointerException()
+                        .isThrownBy(() -> builder.withPiece(null));
+            }
+
         }
 
-        @Test
-        void xSupplierMustBePresentTest() {
-            assertThatNullPointerException()
-                    .isThrownBy(() -> Cell.builder()
-                            .withPiece(piece)
-                            .withY(() -> Y)
-                            .build())
-                    .withMessage("xSupplier must not be null");
-        }
-
-        @Test
-        void ySupplierNotNullTest() {
-            assertThatNullPointerException()
-                    .isThrownBy(() -> Cell.builder()
-                            .withY(null))
-                    .withMessage("ySupplier must not be null");
-        }
-
-        @Test
-        void ySupplierMustBePresentTest() {
-            assertThatNullPointerException()
-                    .isThrownBy(() -> Cell.builder()
-                            .withPiece(piece)
-                            .withX(() -> X)
-                            .build())
-                    .withMessage("ySupplier must not be null");
-        }
-
-        @Test
-        void pieceNotNullTest() {
-            assertThatNullPointerException()
-                    .isThrownBy(() -> Cell.builder()
-                            .withPiece(null))
-                    .withMessage("piece must not be null");
-        }
     }
 
     /**
-     * Check class is built properly.
+     * @author Sam Wykes.
+     * Tests that the class is built correctly.
      */
     @Nested
     class Build {
 
         @Test
-        void builderNotNullTest() {
-            assertThat(Cell.builder()).isNotNull();
-        }
-
-        @Test
         void cellNotNullTest() {
-            ICell cell = Cell.builder()
-                    .withPiece(piece)
-                    .withX(() -> X)
-                    .withY(() -> Y)
-                    .build();
+            ICell cell = Cell.builder().build();
             assertThat(cell).isNotNull();
         }
 
         @Test
-        void pieceOptionalNotNullWhenGivenTest() {
+        void pieceOptionalNotNullWhenProvidedTest(@Mock final IPiece piece) {
             ICell cell = Cell.builder()
                     .withPiece(piece)
-                    .withX(() -> X)
-                    .withY(() -> Y)
                     .build();
             assertThat(cell.getPiece()).isNotNull();
         }
 
         @Test
-        void pieceIsPresentWhenGivenTest() {
+        void pieceOptionalPresentWhenProvidedTest(@Mock final IPiece piece) {
             ICell cell = Cell.builder()
                     .withPiece(piece)
-                    .withX(() -> X)
-                    .withY(() -> Y)
                     .build();
             assertThat(cell.getPiece().isPresent()).isTrue();
         }
 
         @Test
-        void pieceValueNotNullWhenGivenTest() {
+        void getPieceWhenProvidedTest(@Mock final IPiece piece) {
             ICell cell = Cell.builder()
                     .withPiece(piece)
-                    .withX(() -> X)
-                    .withY(() -> Y)
-                    .build();
-            assertThat(cell.getPiece().get()).isNotNull();
-        }
-
-        @Test
-        void getPieceWhenGivenTest() {
-            ICell cell = Cell.builder()
-                    .withPiece(piece)
-                    .withX(() -> X)
-                    .withY(() -> Y)
                     .build();
             assertThat(cell.getPiece().get()).isSameAs(piece);
         }
 
         @Test
-        void pieceOptionalNotNullWhenNotGivenTest() {
-            ICell cell = Cell.builder()
-                    .withX(() -> X)
-                    .withY(() -> Y)
-                    .build();
+        void pieceOptionalNotNullWhenNotProvidedTest() {
+            ICell cell = Cell.builder().build();
             assertThat(cell.getPiece()).isNotNull();
         }
 
         @Test
-        void pieceOptionalIsEmptyWhenNotGivenTest() {
-            ICell cell = Cell.builder()
-                    .withX(() -> X)
-                    .withY(() -> Y)
-                    .build();
+        void pieceOptionalEmptyWhenNotProvidedTest() {
+            ICell cell = Cell.builder().build();
             assertThat(cell.getPiece().isEmpty()).isTrue();
-        }
-
-        @Test
-        void getXTest() {
-            ICell cell = Cell.builder()
-                    .withX(() -> X)
-                    .withY(() -> Y)
-                    .build();
-            assertThat(cell.getX()).isEqualTo(X);
-        }
-
-        @Test
-        void getYTest() {
-            ICell cell = Cell.builder()
-                    .withX(() -> X)
-                    .withY(() -> Y)
-                    .build();
-            assertThat(cell.getY()).isEqualTo(Y);
         }
 
     }

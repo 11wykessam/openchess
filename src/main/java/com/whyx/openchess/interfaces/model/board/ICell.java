@@ -6,28 +6,14 @@ import java.util.Optional;
 
 /**
  * @author Sam Wykes.
- * Interface representing a cell in chess.
+ * Interface representing a cell in a board game, that may contain a piece.
  */
 public interface ICell {
 
     /**
-     * The x coordinate of the cell.
+     * Get the piece in the cell, if present.
      *
-     * @return int.
-     */
-    int getX();
-
-    /**
-     * The y coordinate of the cell.
-     *
-     * @return int.
-     */
-    int getY();
-
-    /**
-     * The chess piece currently in the cell.
-     *
-     * @return {@link IPiece} object.
+     * @return {@link Optional} that may contain {@link IPiece} object.
      */
     Optional<IPiece> getPiece();
 

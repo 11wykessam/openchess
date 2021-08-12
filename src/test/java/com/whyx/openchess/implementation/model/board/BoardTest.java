@@ -1,12 +1,9 @@
 package com.whyx.openchess.implementation.model.board;
 
-import com.whyx.openchess.implementation.exceptions.CellOutOfBoundsException;
-import com.whyx.openchess.implementation.exceptions.InvalidBoardDimensionException;
+import com.whyx.openchess.implementation.exceptions.CellNotFoundException;
 import com.whyx.openchess.interfaces.model.board.IBoard;
-import com.whyx.openchess.interfaces.model.board.IBoardFactory;
 import com.whyx.openchess.interfaces.model.board.ICell;
 import com.whyx.openchess.interfaces.model.piece.IPiece;
-import com.whyx.whyxcommons.collections.ImmutableList;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -14,10 +11,12 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
+import static com.whyx.openchess.implementation.model.board.Board.BoardBuilder;
 import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assumptions.assumeThat;
 
 /**
  * @author Sam Wykes.
@@ -26,127 +25,36 @@ import static org.assertj.core.api.Assertions.*;
 @ExtendWith(MockitoExtension.class)
 public class BoardTest {
 
-    private static final int WIDTH = 8;
-    private static final int HEIGHT = 8;
-    private static final int X = 1;
-    private static final int Y = 1;
-
-    @Mock
-    private ICell cell;
-
     /**
-     * Create board factory responsible for producing {@link IBoard} objects.
-     *
-     * @return {@link IBoardFactory} object.
-     */
-    protected IBoardFactory createBoardFactory() {
-        return new BoardFactory();
-    }
-
-    /**
-     * Create empty cells 2D list.
-     *
-     * @param width  width of the 2D list.
-     * @param height height of the 2D list.
-     * @return {@link ImmutableList}.
-     */
-    private ImmutableList<ImmutableList<ICell>> createEmptyCellsList(int width, int height) {
-        List<ImmutableList<ICell>> mutableCells = new ArrayList<>();
-        for (int i = 0; i < width; i++) {
-            final int x = i;
-
-            // create the column.
-            List<ICell> mutableColumn = new ArrayList<>();
-            for (int j = 0; j < height; j++) {
-                final int y = j;
-
-                // create the cell.
-                mutableColumn.add(
-                        Cell.builder()
-                                .withX(() -> x)
-                                .withY(() -> y)
-                                .build()
-                );
-            }
-            mutableCells.add(ImmutableList.ofList(mutableColumn));
-
-        }
-        return ImmutableList.ofList(mutableCells);
-    }
-
-    /**
-     * Check input parameters are correctly checked for preconditions.
+     * @author Sam Wykes.
+     * Class used to test preconditions for the {@link Board} class.
      */
     @Nested
     class Preconditions {
 
         @Nested
-        class BuilderPreconditions {
+        class BuildPreconditions {
 
-            @Test
-            void cellsHasNoColumnsInvalidTest() {
-                assertThatThrownBy(() -> Board.builder()
-                        .withCells(ImmutableList.ofList(new ArrayList<>()))
-                        .build()
-                ).isExactlyInstanceOf(InvalidBoardDimensionException.class);
-            }
+            private BoardBuilder builder;
 
-            @Test
-            void cellsHasNoRowsInvalidTest() {
-                // create immutable list.
-                ImmutableList<ICell> column = ImmutableList.ofList(new ArrayList<>());
-                List<ImmutableList<ICell>> mutableCells = new ArrayList<>();
-                mutableCells.add(column);
-                ImmutableList<ImmutableList<ICell>> cells = ImmutableList.ofList(mutableCells);
-
-                assertThatThrownBy(() -> Board.builder()
-                        .withCells(cells)
-                        .build())
-                        .isExactlyInstanceOf(InvalidBoardDimensionException.class);
-            }
-
-            @Test
-            void unequalColumnSizeTest(@Mock final ICell cellOne, @Mock final ICell cellTwo) {
-                // create immutable list.
-                List<ICell> smallerColumn = new ArrayList<>();
-                List<ICell> biggerColumn = new ArrayList<>();
-                smallerColumn.add(cellOne);
-                biggerColumn.add(cellOne);
-                biggerColumn.add(cellTwo);
-
-                List<ImmutableList<ICell>> mutableCells = new ArrayList<>();
-                mutableCells.add(ImmutableList.ofList(smallerColumn));
-                mutableCells.add(ImmutableList.ofList(biggerColumn));
-                ImmutableList<ImmutableList<ICell>> cells = ImmutableList.ofList(mutableCells);
-
-                assertThatThrownBy(() -> Board.builder()
-                        .withCells(cells)
-                        .build())
-                        .isExactlyInstanceOf(InvalidBoardDimensionException.class);
+            @BeforeEach
+            void setup() {
+                builder = Board.builder();
+                assumeThat(builder).isNotNull();
             }
 
             @Test
             void cellsNotNullTest() {
                 assertThatNullPointerException()
-                        .isThrownBy(() -> Board.builder()
-                                .withCells(null))
+                        .isThrownBy(() -> builder.withCells(null))
                         .withMessage("cells must not be null");
             }
 
             @Test
             void cellsMustBePresentTest() {
                 assertThatNullPointerException()
-                        .isThrownBy(() -> Board.builder()
-                                .build())
+                        .isThrownBy(() -> builder.build())
                         .withMessage("cells must not be null");
-            }
-
-            @Test
-            void placePieceNotNullTest() {
-                IBoard board = createBoardFactory().emptyBoard(WIDTH, HEIGHT);
-                assertThatNullPointerException()
-                        .isThrownBy(() -> board.placePiece(X, Y, null))
-                        .withMessage("piece must not be null");
             }
 
         }
@@ -154,36 +62,41 @@ public class BoardTest {
         @Nested
         class MethodPreconditions {
 
-            private static final int BOARD_WIDTH = 8;
-            private static final int BOARD_HEIGHT = 8;
+            @Mock
+            private ICell cell;
+            @Mock
+            private IPiece piece;
 
-            // board being tested.
-            private IBoard emptyBoard;
+            private IBoard board;
 
             @BeforeEach
             void setup() {
-                emptyBoard = createBoardFactory().emptyBoard(BOARD_WIDTH, BOARD_HEIGHT);
+                board = Board.builder()
+                        .withCells(Set.of(cell))
+                        .build();
             }
 
             @Test
-            void containsPiecePieceNotNullTest() {
+            void placePieceCellNotNullTest() {
                 assertThatNullPointerException()
-                        .isThrownBy(() -> emptyBoard.containsPiece(null))
-                        .withMessage("piece must not be null");
+                        .isThrownBy(() -> board.placeOnCell(null, piece))
+                        .withMessage("cell must not be null");
             }
 
             @Test
             void placePiecePieceNotNullTest() {
                 assertThatNullPointerException()
-                        .isThrownBy(() -> emptyBoard.placePiece(X, Y, null))
+                        .isThrownBy(() -> board.placeOnCell(cell, null))
                         .withMessage("piece must not be null");
             }
 
             @Test
-            void negativeCoordinatesOutOfBoundsTest(@Mock final IPiece piece) {
-                assertThatThrownBy(() -> emptyBoard.placePiece(-X, -Y, piece))
-                        .isExactlyInstanceOf(CellOutOfBoundsException.class)
-                        .hasMessage("Cell out of bounds");
+            void placePieceCellMustBeOnBoard(@Mock final IPiece wrongPiece) {
+                assertThatThrownBy(
+                        () -> board.placeOnCell(cell, wrongPiece)
+                )
+                        .isExactlyInstanceOf(CellNotFoundException.class)
+                        .hasMessage("cell not found");
             }
 
         }
@@ -191,35 +104,24 @@ public class BoardTest {
     }
 
     /**
-     * Check class is built properly.
+     * @author Sam Wykes.
+     * Class used to check the {@link Board} class is built properly.
      */
     @Nested
     class Build {
 
-        private final ImmutableList<ImmutableList<ICell>> cells = createEmptyCellsList(WIDTH, HEIGHT);
+        @Mock
+        private ICell cellOne;
+        @Mock
+        private ICell cellTwo;
 
         private IBoard board;
 
         @BeforeEach
         void setup() {
             board = Board.builder()
-                    .withCells(cells)
+                    .withCells(Set.of(cellOne, cellTwo))
                     .build();
-        }
-
-        @Test
-        void builderNotNullTest() {
-            assertThat(Board.builder()).isNotNull();
-        }
-
-        @Test
-        void boardNotNullTest() {
-            assertThat(board).isNotNull();
-        }
-
-        @Test
-        void getBoardTest() {
-            assertThat(board).isSameAs(board);
         }
 
         @Test
@@ -229,114 +131,43 @@ public class BoardTest {
 
         @Test
         void getCellsTest() {
-            assertThat(board.getCells()).isSameAs(cells);
-        }
-
-        @Test
-        void getWidthTest() {
-            assertThat(board.getWidth()).isEqualTo(WIDTH);
-        }
-
-        @Test
-        void getHeightTests() {
-            assertThat(board.getHeight()).isEqualTo(HEIGHT);
+            Set<ICell> cells = board.getCells().collect(Collectors.toSet());
+            assertThat(cells).isEqualTo(Set.of(cellOne, cellTwo));
         }
 
     }
 
     /**
-     * Checks functions work as expected.
+     * @author Sam Wykes.
+     * Class used to test {@link Board} class' functionality.
      */
     @Nested
     class Functionality {
 
-        /**
-         * @author Sam Wykes.
-         * Tests associated with the containsPiece function.
-         */
-        @Nested
-        class ContainsPieceTests {
+        @Test
+        void placePieceChangesBoardTest(@Mock final IPiece piece) {
+            ICell cellOne = Cell.builder().build();
+            ICell cellTwo = Cell.builder().build();
+            IBoard board = Board.builder()
+                    .withCells(Set.of(cellOne, cellTwo))
+                    .build();
 
-            // board being tested.
-            private IBoard emptyBoard;
+            IBoard altered = board.placeOnCell(cellOne, piece);
 
-            @BeforeEach
-            void setup() {
-                emptyBoard = createBoardFactory().emptyBoard(WIDTH, HEIGHT);
-            }
-
-            @Test
-            void containsPieceReturnsFalseNoPiecesTest(@Mock final IPiece piece) {
-                assertThat(emptyBoard.containsPiece(piece)).isFalse();
-            }
-
-            @Test
-            void containsPieceReturnsFalseOnePiece(@Mock final IPiece wrongPiece, @Mock final IPiece piece) {
-                IBoard nonEmptyBoard = emptyBoard.placePiece(X, Y, wrongPiece);
-                assertThat(nonEmptyBoard.containsPiece(piece)).isFalse();
-            }
-
-            @Test
-            void containsPieceReturnsTrueOnePieceTest(@Mock final IPiece piece) {
-                IBoard nonEmptyBoard = emptyBoard.placePiece(X, Y, piece);
-                assertThat(nonEmptyBoard.containsPiece(piece)).isTrue();
-            }
+            assertThat(altered).isNotEqualTo(board);
         }
 
-        /**
-         * @author Sam Wykes.
-         * Tests associated with the placePiece function.
-         */
-        @Nested
-        class PlacePieceTests {
+        @Test
+        void placePieceBoardNotNullTest(@Mock final IPiece piece) {
+            ICell cellOne = Cell.builder().build();
+            ICell cellTwo = Cell.builder().build();
+            IBoard board = Board.builder()
+                    .withCells(Set.of(cellOne, cellTwo))
+                    .build();
 
-            private IBoardFactory factory;
+            IBoard altered = board.placeOnCell(cellOne, piece);
 
-            @BeforeEach
-            void setup() {
-                factory = createBoardFactory();
-            }
-
-            @Test
-            void pieceCorrectlyPlacedTest(@Mock final IPiece piece) {
-                IBoard initialBoard = factory.emptyBoard(WIDTH, HEIGHT);
-                IBoard updatedBoard = initialBoard.placePiece(X, Y, piece);
-
-                assertThat(updatedBoard.getCells().get(X).get(Y).getPiece().get()).isSameAs(piece);
-            }
-
-            @Test
-            void cannotPlacePieceLeftOfBoardTest(@Mock final IPiece piece) {
-                IBoard initialBoard = factory.emptyBoard(WIDTH, HEIGHT);
-                assertThatThrownBy(() -> initialBoard.placePiece(-1, 0, piece))
-                        .isExactlyInstanceOf(CellOutOfBoundsException.class)
-                        .hasMessage("Cell out of bounds");
-            }
-
-            @Test
-            void cannotPlacePieceRightOfBoardTest(@Mock final IPiece piece) {
-                IBoard initialBoard = factory.emptyBoard(WIDTH, HEIGHT);
-                assertThatThrownBy(() -> initialBoard.placePiece(WIDTH, 0, piece))
-                        .isExactlyInstanceOf(CellOutOfBoundsException.class)
-                        .hasMessage("Cell out of bounds");
-            }
-
-            @Test
-            void cannotPlacePieceAboveBoardTest(@Mock final IPiece piece) {
-                IBoard initialBoard = factory.emptyBoard(WIDTH, HEIGHT);
-                assertThatThrownBy(() -> initialBoard.placePiece(0, -1, piece))
-                        .isExactlyInstanceOf(CellOutOfBoundsException.class)
-                        .hasMessage("Cell out of bounds");
-            }
-
-            @Test
-            void cannotPlacePieceBelowBoardTest(@Mock final IPiece piece) {
-                IBoard initialBoard = factory.emptyBoard(WIDTH, HEIGHT);
-                assertThatThrownBy(() -> initialBoard.placePiece(0, HEIGHT, piece))
-                        .isExactlyInstanceOf(CellOutOfBoundsException.class)
-                        .hasMessage("Cell out of bounds");
-            }
-
+            assertThat(altered).isNotNull();
         }
 
     }
