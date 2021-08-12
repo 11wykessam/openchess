@@ -26,4 +26,12 @@ public interface IBoard {
      * @param piece The {@link IPiece} being placed.
      */
     IBoard placePieceOnCell(ICell cell, IPiece piece) throws CellNotFoundException;
+
+    /**
+     * Checks whether a given cell exists on the board.
+     *
+     * @param cell {@link ICell} being checked for.
+     * @return boolean.
+     */
+    boolean containsCell(ICell cell);
 }

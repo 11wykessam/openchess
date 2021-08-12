@@ -64,6 +64,18 @@ public class Board implements IBoard {
     }
 
     /**
+     * Check whether a given cell is on the board.
+     *
+     * @param cell {@link ICell} being checked for.
+     * @return boolean.
+     */
+    @Override
+    public boolean containsCell(final ICell cell) {
+        requireNonNull(cell, "cell must not be null");
+        return this.cells.contains(cell);
+    }
+
+    /**
      * Returns function that either maps a cell to itself or places a piece on the cell if it matches a given target.
      *
      * @param targetCell The {@link ICell} that is having a piece placed on it.

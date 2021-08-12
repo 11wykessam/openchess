@@ -2,6 +2,7 @@ package com.whyx.openchess.implementation.model.game;
 
 import com.whyx.openchess.implementation.model.rules.Move;
 import com.whyx.openchess.interfaces.model.board.IBoard;
+import com.whyx.openchess.interfaces.model.board.ICell;
 import com.whyx.openchess.interfaces.model.game.IGame;
 import com.whyx.openchess.interfaces.model.piece.IPiece;
 import com.whyx.openchess.interfaces.model.piece.IPieceRuleBook;
@@ -139,15 +140,21 @@ public class GameTest {
                 @Mock final IRule rule,
                 @Mock final IPieceRuleBook ruleBook,
                 @Mock final IMove move,
+                @Mock final ICell start,
+                @Mock final ICell destination,
                 @Mock final IPiece piece,
                 @Mock final IBoard board
         ) {
-            Stream<IRule> ruleStream = Stream.of(rule);
+            final Stream<IRule> ruleStream = Stream.of(rule);
             given(piece.getRuleBook()).willReturn(ruleBook);
             given(ruleBook.getRules()).willReturn(ruleStream);
             given(rule.moveConformsToRule(move, piece, board)).willReturn(true);
+            given(move.getStart()).willReturn(start);
+            given(move.getDestination()).willReturn(destination);
+            given(board.containsCell(start)).willReturn(true);
+            given(board.containsCell(destination)).willReturn(true);
 
-            IGame game = Game.builder()
+            final IGame game = Game.builder()
                     .withBoard(board)
                     .build();
 

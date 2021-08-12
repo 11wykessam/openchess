@@ -92,12 +92,19 @@ public class BoardTest {
             }
 
             @Test
-            void placePieceCellMustBeOnBoard(@Mock final ICell wrongCell, @Mock final IPiece piece) {
+            void placePieceCellMustBeOnBoardTest(@Mock final ICell wrongCell, @Mock final IPiece piece) {
                 assertThatThrownBy(
                         () -> board.placePieceOnCell(wrongCell, piece)
                 )
                         .isExactlyInstanceOf(CellNotFoundException.class)
                         .hasMessage("cell not found");
+            }
+
+            @Test
+            void containsCellCellNotNullTest() {
+                assertThatNullPointerException()
+                        .isThrownBy(() -> board.containsCell(null))
+                        .withMessage("cell must not be null");
             }
 
         }
@@ -185,6 +192,30 @@ public class BoardTest {
             final IBoard altered = board.placePieceOnCell(cellOne, piece);
 
             assertThat(altered).isNotNull();
+        }
+
+        @Test
+        void containsCellReturnsTrueTest(@Mock final ICell cell) {
+            final IBoard board = Board.builder()
+                    .withCells(Set.of(cell))
+                    .build();
+            assertThat(board.containsCell(cell)).isTrue();
+        }
+
+        @Test
+        void containsCellReturnsFalseNoCellsTest(@Mock final ICell cell) {
+            final IBoard board = Board.builder()
+                    .withCells(Set.of())
+                    .build();
+            assertThat(board.containsCell(cell)).isFalse();
+        }
+
+        @Test
+        void containsCellReturnsFalseWithCellsTest(@Mock final ICell cell, @Mock final ICell wrongCell) {
+            final IBoard board = Board.builder()
+                    .withCells(Set.of(cell))
+                    .build();
+            assertThat(board.containsCell(wrongCell)).isFalse();
         }
 
     }

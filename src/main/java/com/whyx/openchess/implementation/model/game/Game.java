@@ -47,8 +47,36 @@ public class Game implements IGame {
     public boolean isMoveLegal(final IPiece piece, final IMove move) throws PieceNotFoundException, CellNotFoundException {
         requireNonNull(piece, "piece must not be null");
         requireNonNull(move, "move must not be null");
+
+        // check both moves are on the board.
+        if (!moveOnBoard(move)) throw new CellNotFoundException();
+
+        // check the piece is on the start.
+        if (!pieceOnMoveStart(piece, move)) throw new PieceNotFoundException();
+
         return piece.getRuleBook().getRules()
                 .allMatch(rule -> rule.moveConformsToRule(move, piece, this.board));
+    }
+
+    /**
+     * Checks whether the start and end destination of a move are both on the game's board.
+     *
+     * @param move {@link IMove} object.
+     * @return boolean.
+     */
+    private boolean moveOnBoard(final IMove move) {
+        return board.containsCell(move.getStart()) && board.containsCell(move.getDestination());
+    }
+
+    /**
+     * Checks whether a given piece is on the start cell of a move.
+     *
+     * @param piece {@link IPiece} object.
+     * @param move  {@link IMove} object.
+     * @return boolean.
+     */
+    private boolean pieceOnMoveStart(final IPiece piece, final IMove move) {
+        return !(move.getStart().getPiece().isPresent() && move.getStart().getPiece().get().equals(piece));
     }
 
     /**
