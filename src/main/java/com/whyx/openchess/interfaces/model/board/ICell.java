@@ -17,4 +17,11 @@ public interface ICell {
      */
     Optional<IPiece> getPiece();
 
+    /**
+     * Get the location of the piece.
+     *
+     * @return {@link ILocation} object.
+     */
+    ILocation getLocation();
+
 }

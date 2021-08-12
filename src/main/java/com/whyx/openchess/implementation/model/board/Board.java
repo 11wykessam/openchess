@@ -34,7 +34,7 @@ public class Board implements IBoard {
     }
 
     @Override
-    public IBoard placeOnCell(ICell cell, IPiece piece) throws CellNotFoundException {
+    public IBoard placeOnCell(ICell targetCell, IPiece piece) throws CellNotFoundException {
         boolean cellFound = false;
         return null;
     }
