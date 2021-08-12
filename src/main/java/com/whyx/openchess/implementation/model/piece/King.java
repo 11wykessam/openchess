@@ -1,8 +1,8 @@
 package com.whyx.openchess.implementation.model.piece;
 
 import com.whyx.openchess.interfaces.model.piece.IPiece;
-import com.whyx.openchess.interfaces.model.piece.IPieceRuleBook;
 import com.whyx.openchess.interfaces.model.piece.IPieceTeam;
+import com.whyx.openchess.interfaces.model.rules.IRuleBook;
 
 /**
  * @author Sam Wykes.
@@ -11,7 +11,7 @@ import com.whyx.openchess.interfaces.model.piece.IPieceTeam;
 public class King implements IPiece {
 
     @Override
-    public IPieceRuleBook getRuleBook() {
+    public IRuleBook getRuleBook() {
         return null;
     }
 

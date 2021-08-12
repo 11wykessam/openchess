@@ -1,5 +1,7 @@
 package com.whyx.openchess.interfaces.model.piece;
 
+import com.whyx.openchess.interfaces.model.rules.IRuleBook;
+
 /**
  * @author Sam Wykes.
  * Interface representing a piece in a board game.
@@ -9,9 +11,9 @@ public interface IPiece {
     /**
      * Get the rule book associated with the piece.
      *
-     * @return {@link IPieceRuleBook} object.
+     * @return {@link IRuleBook} object.
      */
-    IPieceRuleBook getRuleBook();
+    IRuleBook getRuleBook();
 
     /**
      * Get the team associated with the given piece.

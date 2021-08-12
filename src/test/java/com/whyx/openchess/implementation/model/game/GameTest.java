@@ -6,9 +6,9 @@ import com.whyx.openchess.interfaces.model.board.IBoard;
 import com.whyx.openchess.interfaces.model.board.ICell;
 import com.whyx.openchess.interfaces.model.game.IGame;
 import com.whyx.openchess.interfaces.model.piece.IPiece;
-import com.whyx.openchess.interfaces.model.piece.IPieceRuleBook;
 import com.whyx.openchess.interfaces.model.rules.IMove;
 import com.whyx.openchess.interfaces.model.rules.IRule;
+import com.whyx.openchess.interfaces.model.rules.IRuleBook;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -177,7 +177,7 @@ public class GameTest {
         @Test
         void isMoveLegalReturnsTrueWhenAllRulesSatisfied(
                 @Mock final IRule rule,
-                @Mock final IPieceRuleBook ruleBook,
+                @Mock final IRuleBook ruleBook,
                 @Mock final IMove move,
                 @Mock final ICell start,
                 @Mock final ICell destination,

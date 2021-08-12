@@ -1,6 +1,4 @@
-package com.whyx.openchess.interfaces.model.piece;
-
-import com.whyx.openchess.interfaces.model.rules.IRule;
+package com.whyx.openchess.interfaces.model.rules;
 
 import java.util.stream.Stream;
 
@@ -8,7 +6,7 @@ import java.util.stream.Stream;
  * @author Sam Wykes.
  * Interface representing the rules that a piece must obey in a board game.
  */
-public interface IPieceRuleBook {
+public interface IRuleBook {
 
     /**
      * Get the rules associated with the book.
