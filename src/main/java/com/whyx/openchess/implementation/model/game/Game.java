@@ -18,7 +18,7 @@ public class Game implements IGame {
     /**
      * @param builder {@link GameBuilder} being used to construct the object.
      */
-    private Game(GameBuilder builder) {
+    private Game(final GameBuilder builder) {
         this.board = builder.board;
     }
 
@@ -40,7 +40,7 @@ public class Game implements IGame {
      * @return boolean.
      */
     @Override
-    public boolean isMoveLegal(IPiece piece, IMove move) {
+    public boolean isMoveLegal(final IPiece piece, final IMove move) {
         return false;
     }
 
@@ -61,7 +61,7 @@ public class Game implements IGame {
 
         private IBoard board;
 
-        public GameBuilder withBoard(IBoard board) {
+        public GameBuilder withBoard(final IBoard board) {
             requireNonNull(board, "board must not be null");
             this.board = board;
             return this;

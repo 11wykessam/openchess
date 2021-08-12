@@ -74,7 +74,7 @@ class CellTest {
 
         @Test
         void cellNotNullTest(@Mock final ILocation location) {
-            ICell cell = Cell.builder()
+            final ICell cell = Cell.builder()
                     .withLocation(location)
                     .build();
             assertThat(cell).isNotNull();
@@ -82,7 +82,7 @@ class CellTest {
 
         @Test
         void pieceOptionalNotNullWhenProvidedTest(@Mock final IPiece piece, @Mock final ILocation location) {
-            ICell cell = Cell.builder()
+            final ICell cell = Cell.builder()
                     .withPiece(piece)
                     .withLocation(location)
                     .build();
@@ -91,7 +91,7 @@ class CellTest {
 
         @Test
         void pieceOptionalPresentWhenProvidedTest(@Mock final IPiece piece, @Mock final ILocation location) {
-            ICell cell = Cell.builder()
+            final ICell cell = Cell.builder()
                     .withPiece(piece)
                     .withLocation(location)
                     .build();
@@ -100,7 +100,7 @@ class CellTest {
 
         @Test
         void getPieceWhenProvidedTest(@Mock final IPiece piece, @Mock final ILocation location) {
-            ICell cell = Cell.builder()
+            final ICell cell = Cell.builder()
                     .withPiece(piece)
                     .withLocation(location)
                     .build();
@@ -109,7 +109,7 @@ class CellTest {
 
         @Test
         void pieceOptionalNotNullWhenNotProvidedTest(@Mock final ILocation location) {
-            ICell cell = Cell.builder()
+            final ICell cell = Cell.builder()
                     .withLocation(location)
                     .build();
             assertThat(cell.getPiece()).isNotNull();
@@ -117,7 +117,7 @@ class CellTest {
 
         @Test
         void pieceOptionalEmptyWhenNotProvidedTest(@Mock final ILocation location) {
-            ICell cell = Cell.builder()
+            final ICell cell = Cell.builder()
                     .withLocation(location)
                     .build();
             assertThat(cell.getPiece().isEmpty()).isTrue();
@@ -125,7 +125,7 @@ class CellTest {
 
         @Test
         void locationNotNullTest(@Mock final ILocation location) {
-            ICell cell = Cell.builder()
+            final ICell cell = Cell.builder()
                     .withLocation(location)
                     .build();
             assertThat(cell.getLocation()).isNotNull();
@@ -133,7 +133,7 @@ class CellTest {
 
         @Test
         void getLocationTest(@Mock final ILocation location) {
-            ICell cell = Cell.builder()
+            final ICell cell = Cell.builder()
                     .withLocation(location)
                     .build();
             assertThat(cell.getLocation()).isSameAs(location);

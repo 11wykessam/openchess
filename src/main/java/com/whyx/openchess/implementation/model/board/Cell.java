@@ -20,7 +20,7 @@ public class Cell implements ICell {
     /**
      * @param builder The builder being used to create the object.
      */
-    private Cell(CellBuilder builder) {
+    private Cell(final CellBuilder builder) {
         this.piece = builder.piece;
         this.location = builder.location;
     }
@@ -63,13 +63,13 @@ public class Cell implements ICell {
         private IPiece piece;
         private ILocation location;
 
-        public CellBuilder withPiece(IPiece piece) {
+        public CellBuilder withPiece(final IPiece piece) {
             requireNonNull(piece, "piece must not be null");
             this.piece = piece;
             return this;
         }
 
-        public CellBuilder withLocation(ILocation location) {
+        public CellBuilder withLocation(final ILocation location) {
             requireNonNull(location, "location must not be null");
             this.location = location;
             return this;

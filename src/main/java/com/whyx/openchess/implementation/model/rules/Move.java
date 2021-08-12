@@ -19,7 +19,7 @@ public class Move implements IMove {
      *
      * @param builder {@link MoveBuilder} being used.
      */
-    private Move(MoveBuilder builder) {
+    private Move(final MoveBuilder builder) {
         this.start = builder.start;
         this.destination = builder.destination;
     }
@@ -61,13 +61,13 @@ public class Move implements IMove {
         private ICell start;
         private ICell destination;
 
-        public MoveBuilder withStart(ICell start) {
+        public MoveBuilder withStart(final ICell start) {
             requireNonNull(start, "start must not be null");
             this.start = start;
             return this;
         }
 
-        public MoveBuilder withDestination(ICell destination) {
+        public MoveBuilder withDestination(final ICell destination) {
             requireNonNull(destination, "destination must not be null");
             this.destination = destination;
             return this;

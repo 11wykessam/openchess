@@ -8,6 +8,7 @@ import com.whyx.openchess.interfaces.model.board.IBoard;
 import com.whyx.openchess.interfaces.model.board.ICell;
 import com.whyx.openchess.interfaces.model.game.IGame;
 import com.whyx.openchess.interfaces.rules.IMove;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.util.Set;
@@ -21,22 +22,23 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class GameAcceptanceTest {
 
     @Test
+    @Disabled
     void kingCanMoveForwardTest() {
 
-        King king = new King();
+        final King king = new King();
 
-        ICell start = Cell.builder().build();
-        ICell end = Cell.builder().build();
+        final ICell start = Cell.builder().build();
+        final ICell end = Cell.builder().build();
 
-        IBoard board = Board.builder()
+        final IBoard board = Board.builder()
                 .withCells(Set.of(start, end))
                 .build();
 
-        IGame game = Game.builder()
+        final IGame game = Game.builder()
                 .withBoard(board)
                 .build();
 
-        IMove move = Move.builder()
+        final IMove move = Move.builder()
                 .withStart(start)
                 .withDestination(end)
                 .build();

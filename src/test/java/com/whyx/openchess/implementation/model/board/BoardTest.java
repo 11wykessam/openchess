@@ -3,6 +3,7 @@ package com.whyx.openchess.implementation.model.board;
 import com.whyx.openchess.implementation.exceptions.CellNotFoundException;
 import com.whyx.openchess.interfaces.model.board.IBoard;
 import com.whyx.openchess.interfaces.model.board.ICell;
+import com.whyx.openchess.interfaces.model.board.ILocation;
 import com.whyx.openchess.interfaces.model.piece.IPiece;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
@@ -80,7 +81,7 @@ public class BoardTest {
             void placePieceCellNotNullTest() {
                 assertThatNullPointerException()
                         .isThrownBy(() -> board.placeOnCell(null, piece))
-                        .withMessage("cell must not be null");
+                        .withMessage("targetCell must not be null");
             }
 
             @Test
@@ -91,9 +92,9 @@ public class BoardTest {
             }
 
             @Test
-            void placePieceCellMustBeOnBoard(@Mock final IPiece wrongPiece) {
+            void placePieceCellMustBeOnBoard(@Mock final ICell wrongCell, @Mock final IPiece piece) {
                 assertThatThrownBy(
-                        () -> board.placeOnCell(cell, wrongPiece)
+                        () -> board.placeOnCell(wrongCell, piece)
                 )
                         .isExactlyInstanceOf(CellNotFoundException.class)
                         .hasMessage("cell not found");
@@ -131,7 +132,7 @@ public class BoardTest {
 
         @Test
         void getCellsTest() {
-            Set<ICell> cells = board.getCells().collect(Collectors.toSet());
+            final Set<ICell> cells = board.getCells().collect(Collectors.toSet());
             assertThat(cells).isEqualTo(Set.of(cellOne, cellTwo));
         }
 
@@ -145,27 +146,43 @@ public class BoardTest {
     class Functionality {
 
         @Test
-        void placePieceChangesBoardTest(@Mock final IPiece piece) {
-            ICell cellOne = Cell.builder().build();
-            ICell cellTwo = Cell.builder().build();
-            IBoard board = Board.builder()
+        void placePieceChangesBoardTest(
+                @Mock final IPiece piece,
+                @Mock final ILocation locationOne,
+                @Mock final ILocation locationTwo
+        ) {
+            final ICell cellOne = Cell.builder()
+                    .withLocation(locationOne)
+                    .build();
+            final ICell cellTwo = Cell.builder()
+                    .withLocation(locationTwo)
+                    .build();
+            final IBoard board = Board.builder()
                     .withCells(Set.of(cellOne, cellTwo))
                     .build();
 
-            IBoard altered = board.placeOnCell(cellOne, piece);
+            final IBoard altered = board.placeOnCell(cellOne, piece);
 
             assertThat(altered).isNotEqualTo(board);
         }
 
         @Test
-        void placePieceBoardNotNullTest(@Mock final IPiece piece) {
-            ICell cellOne = Cell.builder().build();
-            ICell cellTwo = Cell.builder().build();
-            IBoard board = Board.builder()
+        void placePieceBoardNotNullTest(
+                @Mock final IPiece piece,
+                @Mock final ILocation locationOne,
+                @Mock final ILocation locationTwo
+        ) {
+            final ICell cellOne = Cell.builder()
+                    .withLocation(locationOne)
+                    .build();
+            final ICell cellTwo = Cell.builder()
+                    .withLocation(locationTwo)
+                    .build();
+            final IBoard board = Board.builder()
                     .withCells(Set.of(cellOne, cellTwo))
                     .build();
 
-            IBoard altered = board.placeOnCell(cellOne, piece);
+            final IBoard altered = board.placeOnCell(cellOne, piece);
 
             assertThat(altered).isNotNull();
         }
