@@ -36,7 +36,7 @@ public class BoardTest {
         @Nested
         class BuildPreconditions {
 
-            private BoardBuilder builder;
+            private BoardBuilder<ILocation> builder;
 
             @BeforeEach
             void setup() {
@@ -64,11 +64,11 @@ public class BoardTest {
         class MethodPreconditions {
 
             @Mock
-            private ICell cell;
+            private ICell<ILocation> cell;
             @Mock
             private IPiece piece;
 
-            private IBoard board;
+            private IBoard<ILocation> board;
 
             @BeforeEach
             void setup() {
@@ -92,7 +92,7 @@ public class BoardTest {
             }
 
             @Test
-            void placePieceCellMustBeOnBoardTest(@Mock final ICell wrongCell, @Mock final IPiece piece) {
+            void placePieceCellMustBeOnBoardTest(@Mock final ICell<ILocation> wrongCell, @Mock final IPiece piece) {
                 assertThatThrownBy(
                         () -> board.placePieceOnCell(wrongCell, piece)
                 )
@@ -119,11 +119,11 @@ public class BoardTest {
     class Build {
 
         @Mock
-        private ICell cellOne;
+        private ICell<ILocation> cellOne;
         @Mock
-        private ICell cellTwo;
+        private ICell<ILocation> cellTwo;
 
-        private IBoard board;
+        private IBoard<ILocation> board;
 
         @BeforeEach
         void setup() {
@@ -139,7 +139,7 @@ public class BoardTest {
 
         @Test
         void getCellsTest() {
-            final Set<ICell> cells = board.getCells().collect(Collectors.toSet());
+            final Set<ICell<ILocation>> cells = board.getCells().collect(Collectors.toSet());
             assertThat(cells).isEqualTo(Set.of(cellOne, cellTwo));
         }
 
@@ -158,17 +158,17 @@ public class BoardTest {
                 @Mock final ILocation locationOne,
                 @Mock final ILocation locationTwo
         ) {
-            final ICell cellOne = Cell.builder()
+            final ICell<ILocation> cellOne = Cell.builder()
                     .withLocation(locationOne)
                     .build();
-            final ICell cellTwo = Cell.builder()
+            final ICell<ILocation> cellTwo = Cell.builder()
                     .withLocation(locationTwo)
                     .build();
-            final IBoard board = Board.builder()
+            final IBoard<ILocation> board = Board.builder()
                     .withCells(Set.of(cellOne, cellTwo))
                     .build();
 
-            final IBoard altered = board.placePieceOnCell(cellOne, piece);
+            final IBoard<ILocation> altered = board.placePieceOnCell(cellOne, piece);
 
             assertThat(altered).isNotEqualTo(board);
         }
@@ -179,40 +179,40 @@ public class BoardTest {
                 @Mock final ILocation locationOne,
                 @Mock final ILocation locationTwo
         ) {
-            final ICell cellOne = Cell.builder()
+            final ICell<ILocation> cellOne = Cell.builder()
                     .withLocation(locationOne)
                     .build();
-            final ICell cellTwo = Cell.builder()
+            final ICell<ILocation> cellTwo = Cell.builder()
                     .withLocation(locationTwo)
                     .build();
-            final IBoard board = Board.builder()
+            final IBoard<ILocation> board = Board.builder()
                     .withCells(Set.of(cellOne, cellTwo))
                     .build();
 
-            final IBoard altered = board.placePieceOnCell(cellOne, piece);
+            final IBoard<ILocation> altered = board.placePieceOnCell(cellOne, piece);
 
             assertThat(altered).isNotNull();
         }
 
         @Test
-        void containsCellReturnsTrueTest(@Mock final ICell cell) {
-            final IBoard board = Board.builder()
+        void containsCellReturnsTrueTest(@Mock final ICell<ILocation> cell) {
+            final IBoard<ILocation> board = Board.builder()
                     .withCells(Set.of(cell))
                     .build();
             assertThat(board.containsCell(cell)).isTrue();
         }
 
         @Test
-        void containsCellReturnsFalseNoCellsTest(@Mock final ICell cell) {
-            final IBoard board = Board.builder()
+        void containsCellReturnsFalseNoCellsTest(@Mock final ICell<ILocation> cell) {
+            final IBoard<ILocation> board = Board.builder()
                     .withCells(Set.of())
                     .build();
             assertThat(board.containsCell(cell)).isFalse();
         }
 
         @Test
-        void containsCellReturnsFalseWithCellsTest(@Mock final ICell cell, @Mock final ICell wrongCell) {
-            final IBoard board = Board.builder()
+        void containsCellReturnsFalseWithCellsTest(@Mock final ICell<ILocation> cell, @Mock final ICell<ILocation> wrongCell) {
+            final IBoard<ILocation> board = Board.builder()
                     .withCells(Set.of(cell))
                     .build();
             assertThat(board.containsCell(wrongCell)).isFalse();

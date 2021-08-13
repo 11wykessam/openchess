@@ -3,6 +3,7 @@ package com.whyx.openchess.implementation.model.board;
 import com.whyx.openchess.implementation.exceptions.CellNotFoundException;
 import com.whyx.openchess.interfaces.model.board.IBoard;
 import com.whyx.openchess.interfaces.model.board.ICell;
+import com.whyx.openchess.interfaces.model.board.ILocation;
 import com.whyx.openchess.interfaces.model.piece.IPiece;
 
 import java.util.Set;
@@ -16,14 +17,14 @@ import static java.util.Objects.requireNonNull;
  * @author Sam Wykes.
  * Class represents a board in a board game.
  */
-public class Board implements IBoard {
+public class Board<T extends ILocation> implements IBoard<T> {
 
-    private final Set<ICell> cells;
+    private final Set<ICell<T>> cells;
 
     /**
      * @param boardBuilder the builder responsible for constructing the class.
      */
-    private Board(final BoardBuilder boardBuilder) {
+    private Board(final BoardBuilder<T> boardBuilder) {
         this.cells = boardBuilder.cells;
     }
 
@@ -33,7 +34,7 @@ public class Board implements IBoard {
      * @return {@link Stream} containing {@link ICell} objects.
      */
     @Override
-    public Stream<ICell> getCells() {
+    public Stream<ICell<T>> getCells() {
         return cells.stream();
     }
 
@@ -46,33 +47,21 @@ public class Board implements IBoard {
      * @throws CellNotFoundException Thrown if the target cell is not on the board.
      */
     @Override
-    public IBoard placePieceOnCell(final ICell targetCell, final IPiece piece) throws CellNotFoundException {
+    public IBoard<T> placePieceOnCell(final ICell<T> targetCell, final IPiece piece) throws CellNotFoundException {
         requireNonNull(targetCell, "targetCell must not be null");
         requireNonNull(piece, "piece must not be null");
 
         // change the cell that needs the piece placed on it.
-        final Set<ICell> alteredCells = this.cells.stream()
+        final Set<ICell<T>> alteredCells = this.cells.stream()
                 .map(changeCellPiece(targetCell, piece)).collect(Collectors.toSet());
 
         // check if anything has been changed.
         if (alteredCells.equals(this.cells)) throw new CellNotFoundException();
 
         // construct the new board.
-        return Board.builder()
+        return Board.<T>builder()
                 .withCells(alteredCells)
                 .build();
-    }
-
-    /**
-     * Check whether a given cell is on the board.
-     *
-     * @param cell {@link ICell} being checked for.
-     * @return boolean.
-     */
-    @Override
-    public boolean containsCell(final ICell cell) {
-        requireNonNull(cell, "cell must not be null");
-        return this.cells.contains(cell);
     }
 
     /**
@@ -82,9 +71,9 @@ public class Board implements IBoard {
      * @param piece      The {@link IPiece} object being placed on the cell.
      * @return {@link Function} mapping {@link ICell} objects to {@link ICell} objects.
      */
-    private Function<ICell, ICell> changeCellPiece(final ICell targetCell, final IPiece piece) {
+    private Function<ICell<T>, ICell<T>> changeCellPiece(final ICell<T> targetCell, final IPiece piece) {
         return cell -> cell.equals(targetCell) ?
-                Cell.builder()
+                Cell.<T>builder()
                         // if the cell is the target construct a new cell with the piece on it.
                         .withLocation(cell.getLocation())
                         .withPiece(piece)
@@ -94,31 +83,43 @@ public class Board implements IBoard {
     }
 
     /**
+     * Check whether a given cell is on the board.
+     *
+     * @param cell {@link ICell} being checked for.
+     * @return boolean.
+     */
+    @Override
+    public boolean containsCell(final ICell<T> cell) {
+        requireNonNull(cell, "cell must not be null");
+        return this.cells.contains(cell);
+    }
+
+    /**
      * Create instance of the builder.
      *
      * @return {@link BoardBuilder} object.
      */
-    public static BoardBuilder builder() {
-        return new BoardBuilder();
+    public static <U extends ILocation> BoardBuilder<U> builder() {
+        return new BoardBuilder<U>();
     }
 
     /**
      * @author Sam Wykes.
      * Class used to create instances of {@link Board}.
      */
-    public static class BoardBuilder {
+    public static class BoardBuilder<U extends ILocation> {
 
-        public Set<ICell> cells;
+        public Set<ICell<U>> cells;
 
-        public BoardBuilder withCells(final Set<ICell> cells) {
+        public BoardBuilder<U> withCells(final Set<ICell<U>> cells) {
             requireNonNull(cells, "cells must not be null");
             this.cells = cells;
             return this;
         }
 
-        public IBoard build() {
+        public IBoard<U> build() {
             requireNonNull(cells, "cells must not be null");
-            return new Board(this);
+            return new Board<U>(this);
         }
     }
 }

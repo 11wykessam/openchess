@@ -5,10 +5,11 @@ import com.whyx.openchess.interfaces.model.piece.IPiece;
 import java.util.Optional;
 
 /**
+ * @param <T> The type of location being stored by the cell.
  * @author Sam Wykes.
  * Interface representing a cell in a board game, that may contain a piece.
  */
-public interface ICell {
+public interface ICell<T extends ILocation> {
 
     /**
      * Get the piece in the cell, if present.
@@ -22,6 +23,6 @@ public interface ICell {
      *
      * @return {@link ILocation} object.
      */
-    ILocation getLocation();
+    T getLocation();
 
 }

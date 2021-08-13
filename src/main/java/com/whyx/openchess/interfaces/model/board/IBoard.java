@@ -7,17 +7,18 @@ import java.util.Iterator;
 import java.util.stream.Stream;
 
 /**
+ * @param <T> The type of location being stored on the board.
  * @author Sam Wykes.
  * Interface that represents a board in a board game.
  */
-public interface IBoard {
+public interface IBoard<T extends ILocation> {
 
     /**
      * Gets the cells on the board.
      *
      * @return {@link Iterator} containing8 {@link ICell} objects.
      */
-    Stream<ICell> getCells();
+    Stream<ICell<T>> getCells();
 
     /**
      * Place a given piece on a cell.
@@ -25,7 +26,7 @@ public interface IBoard {
      * @param cell  The {@link ICell} the piece is being placed on.
      * @param piece The {@link IPiece} being placed.
      */
-    IBoard placePieceOnCell(ICell cell, IPiece piece) throws CellNotFoundException;
+    IBoard<T> placePieceOnCell(ICell<T> cell, IPiece piece) throws CellNotFoundException;
 
     /**
      * Checks whether a given cell exists on the board.
@@ -33,5 +34,5 @@ public interface IBoard {
      * @param cell {@link ICell} being checked for.
      * @return boolean.
      */
-    boolean containsCell(ICell cell);
+    boolean containsCell(ICell<T> cell);
 }

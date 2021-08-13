@@ -12,15 +12,15 @@ import static java.util.Objects.requireNonNull;
  * @author Sam Wykes.
  * Class that represents a cell in a board game.
  */
-public class Cell implements ICell {
+public class Cell<T extends ILocation> implements ICell<T> {
 
     private final IPiece piece;
-    private final ILocation location;
+    private final T location;
 
     /**
      * @param builder The builder being used to create the object.
      */
-    private Cell(final CellBuilder builder) {
+    private Cell(final CellBuilder<T> builder) {
         this.piece = builder.piece;
         this.location = builder.location;
     }
@@ -41,7 +41,7 @@ public class Cell implements ICell {
      * @return {@link ILocation} object.
      */
     @Override
-    public ILocation getLocation() {
+    public T getLocation() {
         return this.location;
     }
 
@@ -50,34 +50,34 @@ public class Cell implements ICell {
      *
      * @return {@link CellBuilder} object.
      */
-    public static CellBuilder builder() {
-        return new CellBuilder();
+    public static <U extends ILocation> CellBuilder<U> builder() {
+        return new CellBuilder<U>();
     }
 
     /**
      * @author Sam Wykes.
      * Class responsible for producing {@link Cell} instances.
      */
-    public static class CellBuilder {
+    public static class CellBuilder<U extends ILocation> {
 
         private IPiece piece;
-        private ILocation location;
+        private U location;
 
-        public CellBuilder withPiece(final IPiece piece) {
+        public CellBuilder<U> withPiece(final IPiece piece) {
             requireNonNull(piece, "piece must not be null");
             this.piece = piece;
             return this;
         }
 
-        public CellBuilder withLocation(final ILocation location) {
+        public CellBuilder<U> withLocation(final U location) {
             requireNonNull(location, "location must not be null");
             this.location = location;
             return this;
         }
 
-        public ICell build() {
+        public ICell<U> build() {
             requireNonNull(location, "location must not be null");
-            return new Cell(this);
+            return new Cell<U>(this);
         }
     }
 }
