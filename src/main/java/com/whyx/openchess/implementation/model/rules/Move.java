@@ -1,25 +1,27 @@
 package com.whyx.openchess.implementation.model.rules;
 
 import com.whyx.openchess.interfaces.model.board.ICell;
+import com.whyx.openchess.interfaces.model.board.ILocation;
 import com.whyx.openchess.interfaces.model.rules.IMove;
 
 import static java.util.Objects.requireNonNull;
 
 /**
+ * @param <T> Type of location being stored by the move's cells.
  * @author Sam Wykes.
  * Class represented a move in a board game.
  */
-public class Move implements IMove {
+public class Move<T extends ILocation> implements IMove<T> {
 
-    private final ICell start;
-    private final ICell destination;
+    private final ICell<T> start;
+    private final ICell<T> destination;
 
     /**
      * Constructor.
      *
      * @param builder {@link MoveBuilder} being used.
      */
-    private Move(final MoveBuilder builder) {
+    private Move(final MoveBuilder<T> builder) {
         this.start = builder.start;
         this.destination = builder.destination;
     }
@@ -30,7 +32,7 @@ public class Move implements IMove {
      * @return {@link ICell} object.
      */
     @Override
-    public ICell getStart() {
+    public ICell<T> getStart() {
         return this.start;
     }
 
@@ -40,7 +42,7 @@ public class Move implements IMove {
      * @return {@link ICell} object.
      */
     @Override
-    public ICell getDestination() {
+    public ICell<T> getDestination() {
         return this.destination;
     }
 
@@ -49,34 +51,36 @@ public class Move implements IMove {
      *
      * @return {@link MoveBuilder} object.
      */
-    public static MoveBuilder builder() {
-        return new MoveBuilder();
+    public static <U extends ILocation> MoveBuilder<U> builder() {
+        return new MoveBuilder<U>();
     }
 
     /**
      * Class used to build {@link Move} instances.
+     *
+     * @param <U> The type of location being stored by the move's cells.
      */
-    public static class MoveBuilder {
+    public static class MoveBuilder<U extends ILocation> {
 
-        private ICell start;
-        private ICell destination;
+        private ICell<U> start;
+        private ICell<U> destination;
 
-        public MoveBuilder withStart(final ICell start) {
+        public MoveBuilder<U> withStart(final ICell<U> start) {
             requireNonNull(start, "start must not be null");
             this.start = start;
             return this;
         }
 
-        public MoveBuilder withDestination(final ICell destination) {
+        public MoveBuilder<U> withDestination(final ICell<U> destination) {
             requireNonNull(destination, "destination must not be null");
             this.destination = destination;
             return this;
         }
 
-        public IMove build() {
+        public IMove<U> build() {
             requireNonNull(start, "start must not be null");
             requireNonNull(destination, "destination must not be null");
-            return new Move(this);
+            return new Move<U>(this);
         }
     }
 }

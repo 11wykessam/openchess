@@ -104,6 +104,7 @@ public class Board<T extends ILocation> implements IBoard<T> {
     }
 
     /**
+     * @param <U> The type of location being represented on the board.
      * @author Sam Wykes.
      * Class used to create instances of {@link Board}.
      */

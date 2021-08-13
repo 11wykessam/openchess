@@ -2,6 +2,7 @@ package com.whyx.openchess.implementation.model.rules;
 
 import com.whyx.openchess.implementation.model.rules.Move.MoveBuilder;
 import com.whyx.openchess.interfaces.model.board.ICell;
+import com.whyx.openchess.interfaces.model.board.ILocation;
 import com.whyx.openchess.interfaces.model.rules.IMove;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
@@ -33,7 +34,7 @@ public class MoveTest {
         @Nested
         class BuilderPreconditions {
 
-            private MoveBuilder builder;
+            private MoveBuilder<ILocation> builder;
 
             @BeforeEach
             void setup() {
@@ -50,7 +51,7 @@ public class MoveTest {
             }
 
             @Test
-            void startMustBePresentTest(@Mock final ICell destination) {
+            void startMustBePresentTest(@Mock final ICell<ILocation> destination) {
                 assertThatNullPointerException()
                         .isThrownBy(() -> builder
                                 .withDestination(destination)
@@ -67,7 +68,7 @@ public class MoveTest {
             }
 
             @Test
-            void destinationMustBePresentTest(@Mock final ICell start) {
+            void destinationMustBePresentTest(@Mock final ICell<ILocation> start) {
                 assertThatNullPointerException()
                         .isThrownBy(() -> builder
                                 .withStart(start)
@@ -86,10 +87,10 @@ public class MoveTest {
     class Build {
 
         @Mock
-        private ICell start;
+        private ICell<ILocation> start;
 
         @Mock
-        private ICell destination;
+        private ICell<ILocation> destination;
 
         @Test
         void builderNotNullTest() {
@@ -99,7 +100,7 @@ public class MoveTest {
         @Nested
         class BuilderNotNull {
 
-            private IMove move;
+            private IMove<ILocation> move;
 
             @BeforeEach
             void setup() {

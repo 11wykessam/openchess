@@ -9,6 +9,7 @@ import java.util.Optional;
 import static java.util.Objects.requireNonNull;
 
 /**
+ * @param <T> The type of location being stored by the cell.
  * @author Sam Wykes.
  * Class that represents a cell in a board game.
  */
@@ -55,6 +56,7 @@ public class Cell<T extends ILocation> implements ICell<T> {
     }
 
     /**
+     * @param <U> The type of location being stored by the cells being built.
      * @author Sam Wykes.
      * Class responsible for producing {@link Cell} instances.
      */
