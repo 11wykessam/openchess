@@ -1,5 +1,6 @@
 package com.whyx.openchess.implementation.model.rules;
 
+import com.whyx.openchess.interfaces.model.board.ILocation;
 import com.whyx.openchess.interfaces.model.rules.IRule;
 import com.whyx.openchess.interfaces.model.rules.IRuleBook;
 
@@ -9,17 +10,18 @@ import java.util.stream.Stream;
 import static java.util.Objects.requireNonNull;
 
 /**
+ * @param <T> The type of location the rules in the rule book can deal with.
  * @author Sam Wykes.
  * Class representing a collection of rules that a given piece in a board game must adhere to.
  */
-public class RuleBook implements IRuleBook {
+public class RuleBook<T extends ILocation> implements IRuleBook<T> {
 
-    private final Set<IRule> rules;
+    private final Set<IRule<T>> rules;
 
     /**
      * @param ruleBookBuilder object responsible for building object.
      */
-    public RuleBook(final RuleBookBuilder ruleBookBuilder) {
+    public RuleBook(final RuleBookBuilder<T> ruleBookBuilder) {
         this.rules = ruleBookBuilder.rules;
     }
 
@@ -29,7 +31,7 @@ public class RuleBook implements IRuleBook {
      * @return {@link Stream} containing {@link IRule} objects.
      */
     @Override
-    public Stream<IRule> getRules() {
+    public Stream<IRule<T>> getRules() {
         return this.rules.stream();
     }
 
@@ -38,27 +40,28 @@ public class RuleBook implements IRuleBook {
      *
      * @return {@link RuleBookBuilder} object.
      */
-    public static RuleBookBuilder builder() {
-        return new RuleBookBuilder();
+    public static <U extends ILocation> RuleBookBuilder<U> builder() {
+        return new RuleBookBuilder<>();
     }
 
     /**
+     * @param <U> The type of location the rule book being built will deal with.
      * @author Sam Wykes.
      * Class responsible for constructing {@link RuleBook} instances.
      */
-    public static class RuleBookBuilder {
+    public static class RuleBookBuilder<U extends ILocation> {
 
-        public Set<IRule> rules;
+        public Set<IRule<U>> rules;
 
-        public RuleBookBuilder withRules(final Set<IRule> rules) {
+        public RuleBookBuilder<U> withRules(final Set<IRule<U>> rules) {
             requireNonNull(rules, "rules must not be null");
             this.rules = rules;
             return this;
         }
 
-        public RuleBook build() {
+        public RuleBook<U> build() {
             requireNonNull(rules, "rules must not be null");
-            return new RuleBook(this);
+            return new RuleBook<>(this);
         }
     }
 }

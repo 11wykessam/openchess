@@ -47,7 +47,7 @@ public class Board<T extends ILocation> implements IBoard<T> {
      * @throws CellNotFoundException Thrown if the target cell is not on the board.
      */
     @Override
-    public IBoard<T> placePieceOnCell(final ICell<T> targetCell, final IPiece piece) throws CellNotFoundException {
+    public IBoard<T> placePieceOnCell(final ICell<T> targetCell, final IPiece<T> piece) throws CellNotFoundException {
         requireNonNull(targetCell, "targetCell must not be null");
         requireNonNull(piece, "piece must not be null");
 
@@ -71,7 +71,7 @@ public class Board<T extends ILocation> implements IBoard<T> {
      * @param piece      The {@link IPiece} object being placed on the cell.
      * @return {@link Function} mapping {@link ICell} objects to {@link ICell} objects.
      */
-    private Function<ICell<T>, ICell<T>> changeCellPiece(final ICell<T> targetCell, final IPiece piece) {
+    private Function<ICell<T>, ICell<T>> changeCellPiece(final ICell<T> targetCell, final IPiece<T> piece) {
         return cell -> cell.equals(targetCell) ?
                 Cell.<T>builder()
                         // if the cell is the target construct a new cell with the piece on it.
@@ -100,7 +100,7 @@ public class Board<T extends ILocation> implements IBoard<T> {
      * @return {@link BoardBuilder} object.
      */
     public static <U extends ILocation> BoardBuilder<U> builder() {
-        return new BoardBuilder<U>();
+        return new BoardBuilder<>();
     }
 
     /**
@@ -120,7 +120,7 @@ public class Board<T extends ILocation> implements IBoard<T> {
 
         public IBoard<U> build() {
             requireNonNull(cells, "cells must not be null");
-            return new Board<U>(this);
+            return new Board<>(this);
         }
     }
 }

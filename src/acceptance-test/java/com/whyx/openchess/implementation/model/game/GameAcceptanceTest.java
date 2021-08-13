@@ -2,6 +2,7 @@ package com.whyx.openchess.implementation.model.game;
 
 import com.whyx.openchess.implementation.model.board.Board;
 import com.whyx.openchess.implementation.model.board.Cell;
+import com.whyx.openchess.implementation.model.board.location.TwoDimensionalLocation;
 import com.whyx.openchess.implementation.model.piece.King;
 import com.whyx.openchess.implementation.model.rules.Move;
 import com.whyx.openchess.interfaces.model.board.IBoard;
@@ -27,18 +28,18 @@ public class GameAcceptanceTest {
 
         final King king = new King();
 
-        final ICell start = Cell.builder().build();
-        final ICell end = Cell.builder().build();
+        final ICell<TwoDimensionalLocation> start = Cell.<TwoDimensionalLocation>builder().build();
+        final ICell<TwoDimensionalLocation> end = Cell.<TwoDimensionalLocation>builder().build();
 
-        final IBoard board = Board.builder()
+        final IBoard<TwoDimensionalLocation> board = Board.<TwoDimensionalLocation>builder()
                 .withCells(Set.of(start, end))
                 .build();
 
-        final IGame game = Game.builder()
+        final IGame<TwoDimensionalLocation> game = Game.<TwoDimensionalLocation>builder()
                 .withBoard(board)
                 .build();
 
-        final IMove move = Move.builder()
+        final IMove<TwoDimensionalLocation> move = Move.<TwoDimensionalLocation>builder()
                 .withStart(start)
                 .withDestination(end)
                 .build();

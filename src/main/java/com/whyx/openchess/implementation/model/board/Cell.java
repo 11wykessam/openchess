@@ -15,7 +15,7 @@ import static java.util.Objects.requireNonNull;
  */
 public class Cell<T extends ILocation> implements ICell<T> {
 
-    private final IPiece piece;
+    private final IPiece<T> piece;
     private final T location;
 
     /**
@@ -32,7 +32,7 @@ public class Cell<T extends ILocation> implements ICell<T> {
      * @return {@link Optional} object that may contain a {@link IPiece} object.
      */
     @Override
-    public Optional<IPiece> getPiece() {
+    public Optional<IPiece<T>> getPiece() {
         return Optional.ofNullable(piece);
     }
 
@@ -52,7 +52,7 @@ public class Cell<T extends ILocation> implements ICell<T> {
      * @return {@link CellBuilder} object.
      */
     public static <U extends ILocation> CellBuilder<U> builder() {
-        return new CellBuilder<U>();
+        return new CellBuilder<>();
     }
 
     /**
@@ -62,10 +62,10 @@ public class Cell<T extends ILocation> implements ICell<T> {
      */
     public static class CellBuilder<U extends ILocation> {
 
-        private IPiece piece;
+        private IPiece<U> piece;
         private U location;
 
-        public CellBuilder<U> withPiece(final IPiece piece) {
+        public CellBuilder<U> withPiece(final IPiece<U> piece) {
             requireNonNull(piece, "piece must not be null");
             this.piece = piece;
             return this;
@@ -79,7 +79,7 @@ public class Cell<T extends ILocation> implements ICell<T> {
 
         public ICell<U> build() {
             requireNonNull(location, "location must not be null");
-            return new Cell<U>(this);
+            return new Cell<>(this);
         }
     }
 }

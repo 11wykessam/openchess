@@ -66,7 +66,7 @@ public class BoardTest {
             @Mock
             private ICell<ILocation> cell;
             @Mock
-            private IPiece piece;
+            private IPiece<ILocation> piece;
 
             private IBoard<ILocation> board;
 
@@ -92,7 +92,7 @@ public class BoardTest {
             }
 
             @Test
-            void placePieceCellMustBeOnBoardTest(@Mock final ICell<ILocation> wrongCell, @Mock final IPiece piece) {
+            void placePieceCellMustBeOnBoardTest(@Mock final ICell<ILocation> wrongCell, @Mock final IPiece<ILocation> piece) {
                 assertThatThrownBy(
                         () -> board.placePieceOnCell(wrongCell, piece)
                 )
@@ -154,7 +154,7 @@ public class BoardTest {
 
         @Test
         void placePieceChangesBoardTest(
-                @Mock final IPiece piece,
+                @Mock final IPiece<ILocation> piece,
                 @Mock final ILocation locationOne,
                 @Mock final ILocation locationTwo
         ) {
@@ -175,7 +175,7 @@ public class BoardTest {
 
         @Test
         void placePieceBoardNotNullTest(
-                @Mock final IPiece piece,
+                @Mock final IPiece<ILocation> piece,
                 @Mock final ILocation locationOne,
                 @Mock final ILocation locationTwo
         ) {

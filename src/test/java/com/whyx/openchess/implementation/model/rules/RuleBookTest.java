@@ -1,6 +1,7 @@
 package com.whyx.openchess.implementation.model.rules;
 
 import com.whyx.openchess.implementation.model.rules.RuleBook.RuleBookBuilder;
+import com.whyx.openchess.interfaces.model.board.ILocation;
 import com.whyx.openchess.interfaces.model.rules.IRule;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
@@ -30,7 +31,7 @@ class RuleBookTest {
     @Nested
     class Preconditions {
 
-        private RuleBookBuilder builder;
+        private RuleBookBuilder<ILocation> builder;
 
         @BeforeEach
         void setup() {
@@ -62,11 +63,11 @@ class RuleBookTest {
     class Build {
 
         @Mock
-        private IRule ruleOne;
+        private IRule<ILocation> ruleOne;
         @Mock
-        private IRule ruleTwo;
+        private IRule<ILocation> ruleTwo;
 
-        private RuleBook ruleBook;
+        private RuleBook<ILocation> ruleBook;
 
         @BeforeEach
         void setup() {

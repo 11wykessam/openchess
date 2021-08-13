@@ -18,7 +18,7 @@ public class TwoDimensionalLocation implements ILocation {
     /**
      * @param builder Builder responsible for constructing object.
      */
-    public TwoDimensionalLocation(TwoDimensionalLocationBuilder builder) {
+    public TwoDimensionalLocation(final TwoDimensionalLocationBuilder builder) {
         this.x = builder.xSupplier.get();
         this.y = builder.ySupplier.get();
     }

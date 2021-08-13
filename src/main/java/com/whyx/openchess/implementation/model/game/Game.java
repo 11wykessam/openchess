@@ -3,6 +3,7 @@ package com.whyx.openchess.implementation.model.game;
 import com.whyx.openchess.implementation.exceptions.CellNotFoundException;
 import com.whyx.openchess.implementation.exceptions.PieceNotFoundException;
 import com.whyx.openchess.interfaces.model.board.IBoard;
+import com.whyx.openchess.interfaces.model.board.ILocation;
 import com.whyx.openchess.interfaces.model.game.IGame;
 import com.whyx.openchess.interfaces.model.piece.IPiece;
 import com.whyx.openchess.interfaces.model.rules.IMove;
@@ -10,17 +11,18 @@ import com.whyx.openchess.interfaces.model.rules.IMove;
 import static java.util.Objects.requireNonNull;
 
 /**
+ * @param <T> The type of location being used in the game.
  * @author Sam Wykes.
  * Class used to represent a board game.
  */
-public class Game implements IGame {
+public class Game<T extends ILocation> implements IGame<T> {
 
-    private final IBoard board;
+    private final IBoard<T> board;
 
     /**
      * @param builder {@link GameBuilder} being used to construct the object.
      */
-    private Game(final GameBuilder builder) {
+    private Game(final GameBuilder<T> builder) {
         this.board = builder.board;
     }
 
@@ -30,7 +32,7 @@ public class Game implements IGame {
      * @return {@link IBoard} object.
      */
     @Override
-    public IBoard getBoard() {
+    public IBoard<T> getBoard() {
         return this.board;
     }
 
@@ -44,7 +46,7 @@ public class Game implements IGame {
      * @throws CellNotFoundException  thrown if either the start or destination cell not in the game.
      */
     @Override
-    public boolean isMoveLegal(final IPiece piece, final IMove move) throws PieceNotFoundException, CellNotFoundException {
+    public boolean isMoveLegal(final IPiece<T> piece, final IMove<T> move) throws PieceNotFoundException, CellNotFoundException {
         requireNonNull(piece, "piece must not be null");
         requireNonNull(move, "move must not be null");
 
@@ -64,7 +66,7 @@ public class Game implements IGame {
      * @param move {@link IMove} object.
      * @return boolean.
      */
-    private boolean moveOnBoard(final IMove move) {
+    private boolean moveOnBoard(final IMove<T> move) {
         return board.containsCell(move.getStart()) && board.containsCell(move.getDestination());
     }
 
@@ -75,7 +77,7 @@ public class Game implements IGame {
      * @param move  {@link IMove} object.
      * @return boolean.
      */
-    private boolean pieceOnMoveStart(final IPiece piece, final IMove move) {
+    private boolean pieceOnMoveStart(final IPiece<T> piece, final IMove<T> move) {
         return !(move.getStart().getPiece().isPresent() && move.getStart().getPiece().get().equals(piece));
     }
 
@@ -84,27 +86,28 @@ public class Game implements IGame {
      *
      * @return {@link GameBuilder} object.
      */
-    public static GameBuilder builder() {
-        return new GameBuilder();
+    public static <U extends ILocation> GameBuilder<U> builder() {
+        return new GameBuilder<>();
     }
 
     /**
+     * @param <U> The type of location being used in the game being made.
      * @author Sam Wykes.
      * Class used to create instances of the {@link Game} class.
      */
-    public static class GameBuilder {
+    public static class GameBuilder<U extends ILocation> {
 
-        private IBoard board;
+        private IBoard<U> board;
 
-        public GameBuilder withBoard(final IBoard board) {
+        public GameBuilder<U> withBoard(final IBoard<U> board) {
             requireNonNull(board, "board must not be null");
             this.board = board;
             return this;
         }
 
-        public Game build() {
+        public Game<U> build() {
             requireNonNull(board, "board must not be null");
-            return new Game(this);
+            return new Game<>(this);
         }
 
     }

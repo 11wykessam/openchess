@@ -26,7 +26,7 @@ public interface IBoard<T extends ILocation> {
      * @param cell  The {@link ICell} the piece is being placed on.
      * @param piece The {@link IPiece} being placed.
      */
-    IBoard<T> placePieceOnCell(ICell<T> cell, IPiece piece) throws CellNotFoundException;
+    IBoard<T> placePieceOnCell(ICell<T> cell, IPiece<T> piece) throws CellNotFoundException;
 
     /**
      * Checks whether a given cell exists on the board.

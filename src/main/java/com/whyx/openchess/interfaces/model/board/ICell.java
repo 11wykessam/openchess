@@ -16,7 +16,7 @@ public interface ICell<T extends ILocation> {
      *
      * @return {@link Optional} that may contain {@link IPiece} object.
      */
-    Optional<IPiece> getPiece();
+    Optional<IPiece<T>> getPiece();
 
     /**
      * Get the location of the piece.

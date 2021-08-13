@@ -4,6 +4,7 @@ import com.whyx.openchess.implementation.exceptions.CellNotFoundException;
 import com.whyx.openchess.implementation.model.rules.Move;
 import com.whyx.openchess.interfaces.model.board.IBoard;
 import com.whyx.openchess.interfaces.model.board.ICell;
+import com.whyx.openchess.interfaces.model.board.ILocation;
 import com.whyx.openchess.interfaces.model.game.IGame;
 import com.whyx.openchess.interfaces.model.piece.IPiece;
 import com.whyx.openchess.interfaces.model.rules.IMove;
@@ -40,7 +41,7 @@ public class GameTest {
         @Nested
         class BuilderPreconditions {
 
-            private GameBuilder builder;
+            private GameBuilder<ILocation> builder;
 
             @BeforeEach
             void setup() {
@@ -67,10 +68,10 @@ public class GameTest {
         @Nested
         class MethodPreconditions {
 
-            private Game game;
+            private Game<ILocation> game;
 
             @Mock
-            private IBoard board;
+            private IBoard<ILocation> board;
 
             @BeforeEach
             void setup() {
@@ -80,14 +81,14 @@ public class GameTest {
             }
 
             @Test
-            void isMoveLegalPieceNotNullTest(@Mock final Move move) {
+            void isMoveLegalPieceNotNullTest(@Mock final Move<ILocation> move) {
                 assertThatNullPointerException()
                         .isThrownBy(() -> game.isMoveLegal(null, move))
                         .withMessage("piece must not be null");
             }
 
             @Test
-            void isMoveLegalMoveNotNullTest(@Mock final IPiece piece) {
+            void isMoveLegalMoveNotNullTest(@Mock final IPiece<ILocation> piece) {
                 assertThatNullPointerException()
                         .isThrownBy(() -> game.isMoveLegal(piece, null))
                         .withMessage("move must not be null");
@@ -95,9 +96,9 @@ public class GameTest {
 
             @Test
             void isMoveLegalStartNotOnBoardTest(
-                    @Mock final IPiece piece,
-                    @Mock final ICell start,
-                    @Mock final IMove move
+                    @Mock final IPiece<ILocation> piece,
+                    @Mock final ICell<ILocation> start,
+                    @Mock final IMove<ILocation> move
             ) {
                 given(move.getStart()).willReturn(start);
 
@@ -108,9 +109,9 @@ public class GameTest {
 
             @Test
             void isMoveLegalDestinationNotOnBoardTest(
-                    @Mock final IPiece piece,
-                    @Mock final ICell start,
-                    @Mock final IMove move
+                    @Mock final IPiece<ILocation> piece,
+                    @Mock final ICell<ILocation> start,
+                    @Mock final IMove<ILocation> move
             ) {
                 given(move.getStart()).willReturn(start);
 
@@ -121,9 +122,9 @@ public class GameTest {
 
             @Test
             void isMoveLegalPieceNotOnStartTest(
-                    @Mock final IPiece piece,
-                    @Mock final ICell start,
-                    @Mock final IMove move
+                    @Mock final IPiece<ILocation> piece,
+                    @Mock final ICell<ILocation> start,
+                    @Mock final IMove<ILocation> move
             ) {
                 given(move.getStart()).willReturn(start);
 
@@ -142,9 +143,9 @@ public class GameTest {
         class AfterBuild {
 
             @Mock
-            private IBoard board;
+            private IBoard<ILocation> board;
 
-            private IGame game;
+            private IGame<ILocation> game;
 
             @BeforeEach
             void setup() {
@@ -176,15 +177,15 @@ public class GameTest {
 
         @Test
         void isMoveLegalReturnsTrueWhenAllRulesSatisfied(
-                @Mock final IRule rule,
-                @Mock final IRuleBook ruleBook,
-                @Mock final IMove move,
-                @Mock final ICell start,
-                @Mock final ICell destination,
-                @Mock final IPiece piece,
-                @Mock final IBoard board
+                @Mock final IRule<ILocation> rule,
+                @Mock final IRuleBook<ILocation> ruleBook,
+                @Mock final IMove<ILocation> move,
+                @Mock final ICell<ILocation> start,
+                @Mock final ICell<ILocation> destination,
+                @Mock final IPiece<ILocation> piece,
+                @Mock final IBoard<ILocation> board
         ) {
-            final Stream<IRule> ruleStream = Stream.of(rule);
+            final Stream<IRule<ILocation>> ruleStream = Stream.of(rule);
             given(piece.getRuleBook()).willReturn(ruleBook);
             given(ruleBook.getRules()).willReturn(ruleStream);
             given(rule.moveConformsToRule(move, piece, board)).willReturn(true);
@@ -193,7 +194,7 @@ public class GameTest {
             given(board.containsCell(start)).willReturn(true);
             given(board.containsCell(destination)).willReturn(true);
 
-            final IGame game = Game.builder()
+            final IGame<ILocation> game = Game.builder()
                     .withBoard(board)
                     .build();
 

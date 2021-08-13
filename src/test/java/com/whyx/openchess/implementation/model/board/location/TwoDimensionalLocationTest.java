@@ -40,7 +40,7 @@ public class TwoDimensionalLocationTest {
         }
 
         @Test
-        void xSupplierMustBePresentTest(@Mock Supplier<Integer> ySupplier) {
+        void xSupplierMustBePresentTest(@Mock final Supplier<Integer> ySupplier) {
             assertThatNullPointerException()
                     .isThrownBy(() -> builder
                             .withYSupplier(ySupplier)

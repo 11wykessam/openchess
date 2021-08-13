@@ -52,7 +52,7 @@ public class Move<T extends ILocation> implements IMove<T> {
      * @return {@link MoveBuilder} object.
      */
     public static <U extends ILocation> MoveBuilder<U> builder() {
-        return new MoveBuilder<U>();
+        return new MoveBuilder<>();
     }
 
     /**
@@ -80,7 +80,7 @@ public class Move<T extends ILocation> implements IMove<T> {
         public IMove<U> build() {
             requireNonNull(start, "start must not be null");
             requireNonNull(destination, "destination must not be null");
-            return new Move<U>(this);
+            return new Move<>(this);
         }
     }
 }
