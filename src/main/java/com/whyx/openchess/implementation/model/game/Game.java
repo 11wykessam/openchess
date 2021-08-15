@@ -50,7 +50,7 @@ public class Game<T extends ILocation> implements IGame<T> {
         requireNonNull(piece, "piece must not be null");
         requireNonNull(move, "move must not be null");
 
-        // check both moves are on the board.
+        // check both cells are on the board.
         if (!moveOnBoard(move)) throw new CellNotFoundException();
 
         // check the piece is on the start.

@@ -1,7 +1,7 @@
 package com.whyx.openchess.implementation.model.game;
 
 import com.whyx.openchess.implementation.exceptions.CellNotFoundException;
-import com.whyx.openchess.implementation.model.rules.Move;
+import com.whyx.openchess.implementation.model.rule.Move;
 import com.whyx.openchess.interfaces.model.board.IBoard;
 import com.whyx.openchess.interfaces.model.board.ICell;
 import com.whyx.openchess.interfaces.model.board.ILocation;

@@ -1,6 +1,6 @@
-package com.whyx.openchess.implementation.model.rules;
+package com.whyx.openchess.implementation.model.rule;
 
-import com.whyx.openchess.implementation.model.rules.RuleBook.RuleBookBuilder;
+import com.whyx.openchess.implementation.model.rule.RuleBook.RuleBookBuilder;
 import com.whyx.openchess.interfaces.model.board.ILocation;
 import com.whyx.openchess.interfaces.model.rules.IRule;
 import org.junit.jupiter.api.BeforeEach;
