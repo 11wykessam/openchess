@@ -148,6 +148,58 @@ class CanMoveInUnobstructedStraightLineRuleTest {
             assertThat(rule.moveConformsToRule(move, piece, board)).isFalse();
         }
 
+        @Test
+        void noHorizontalObstructionUpwardsMovementTest(
+                @Mock final IMove<TwoDimensionalLocation> move,
+                @Mock final ICell<TwoDimensionalLocation> startCell,
+                @Mock final ICell<TwoDimensionalLocation> destinationCell,
+                @Mock final ICell<TwoDimensionalLocation> obstructionCell,
+                @Mock final TwoDimensionalLocation startLocation,
+                @Mock final TwoDimensionalLocation destinationLocation,
+                @Mock final TwoDimensionalLocation obstructionLocation,
+                @Mock final IPiece<TwoDimensionalLocation> obstruction,
+                @Mock final IPiece<TwoDimensionalLocation> piece,
+                @Mock final IBoard<TwoDimensionalLocation> board
+        ) {
+            given(move.getStart()).willReturn(startCell);
+            given(move.getDestination()).willReturn(destinationCell);
+            given(startCell.getLocation()).willReturn(startLocation);
+            given(destinationCell.getLocation()).willReturn(destinationLocation);
+            given(obstructionCell.getLocation()).willReturn(obstructionLocation);
+            given(startLocation.getX()).willReturn(0);
+            given(startLocation.getY()).willReturn(0);
+            given(destinationLocation.getX()).willReturn(2);
+            given(destinationLocation.getY()).willReturn(0);
+            given(obstructionLocation.getX()).willReturn(1);
+            given(obstructionLocation.getY()).willReturn(0);
+            given(obstructionCell.getPiece()).willReturn(Optional.empty());
+            given(board.getCells()).willReturn(Stream.of(startCell, destinationCell, obstructionCell));
+
+            assertThat(rule.moveConformsToRule(move, piece, board)).isTrue();
+        }
+
+        @Test
+        void missingCellHorizontalMoveTest(
+                @Mock final IMove<TwoDimensionalLocation> move,
+                @Mock final ICell<TwoDimensionalLocation> startCell,
+                @Mock final ICell<TwoDimensionalLocation> destinationCell,
+                @Mock final TwoDimensionalLocation startLocation,
+                @Mock final TwoDimensionalLocation destinationLocation,
+                @Mock final IPiece<TwoDimensionalLocation> piece,
+                @Mock final IBoard<TwoDimensionalLocation> board
+        ) {
+            given(move.getStart()).willReturn(startCell);
+            given(move.getDestination()).willReturn(destinationCell);
+            given(startCell.getLocation()).willReturn(startLocation);
+            given(destinationCell.getLocation()).willReturn(destinationLocation);
+            given(startLocation.getX()).willReturn(0);
+            given(startLocation.getY()).willReturn(0);
+            given(destinationLocation.getX()).willReturn(2);
+            given(destinationLocation.getY()).willReturn(0);
+            given(board.getCells()).willReturn(Stream.of(startCell, destinationCell));
+
+            assertThat(rule.moveConformsToRule(move, piece, board)).isFalse();
+        }
 
     }
 
