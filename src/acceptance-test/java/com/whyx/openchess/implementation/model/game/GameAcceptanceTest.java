@@ -10,12 +10,15 @@ import com.whyx.openchess.interfaces.model.board.ICell;
 import com.whyx.openchess.interfaces.model.game.IGame;
 import com.whyx.openchess.interfaces.model.piece.IPieceTeam;
 import com.whyx.openchess.interfaces.model.rules.IMove;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Set;
+import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -26,8 +29,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 @ExtendWith(MockitoExtension.class)
 public class GameAcceptanceTest {
 
-    @Test
-    void kingCanMoveForwardTest(@Mock final IPieceTeam pieceTeam) {
+    @Mock
+    private IPieceTeam pieceTeam;
+
+    @ParameterizedTest
+    @MethodSource("legalMoveStream")
+    void kingCanMoveToAdjacentTiles(final int xOffset, final int yOffset) {
 
         final int startX = 0;
         final int startY = 0;
@@ -42,8 +49,8 @@ public class GameAcceptanceTest {
                 .build();
 
         final TwoDimensionalLocation destinationLocation = TwoDimensionalLocation.builder()
-                .withXSupplier(() -> startX)
-                .withYSupplier(() -> startY + 1)
+                .withXSupplier(() -> startX + xOffset)
+                .withYSupplier(() -> startY + yOffset)
                 .build();
 
         final ICell<TwoDimensionalLocation> start = Cell.<TwoDimensionalLocation>builder()
@@ -68,6 +75,20 @@ public class GameAcceptanceTest {
 
         assertThat(game.isMoveLegal(king, move)).isTrue();
 
+    }
+
+    private static Stream<Arguments> legalMoveStream() {
+        return Stream.of(
+                Arguments.of(-1, -1),
+                Arguments.of(-1, 0),
+                Arguments.of(-1, 1),
+                Arguments.of(0, -1),
+                Arguments.of(0, 0),
+                Arguments.of(0, 1),
+                Arguments.of(1, -1),
+                Arguments.of(1, 0),
+                Arguments.of(1, 1)
+        );
     }
 
 }
