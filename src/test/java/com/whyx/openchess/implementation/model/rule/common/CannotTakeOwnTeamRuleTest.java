@@ -70,6 +70,19 @@ class CannotTakeOwnTeamRuleTest {
             assertThat(rule.moveConformsToRule(move, piece, board)).isTrue();
         }
 
+        @Test
+        void pieceCanTakeEmptyCellTest(
+                @Mock final IMove<ILocation> move,
+                @Mock final ICell<ILocation> destination,
+                @Mock final IPiece<ILocation> piece,
+                @Mock final IBoard<ILocation> board
+        ) {
+            given(move.getDestination()).willReturn(destination);
+            given(destination.getPiece()).willReturn(Optional.empty());
+
+            assertThat(rule.moveConformsToRule(move, piece, board)).isTrue();
+        }
+
     }
 
 }
