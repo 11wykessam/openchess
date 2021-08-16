@@ -8,8 +8,10 @@ import com.whyx.openchess.implementation.model.rule.Move;
 import com.whyx.openchess.interfaces.model.board.IBoard;
 import com.whyx.openchess.interfaces.model.board.ICell;
 import com.whyx.openchess.interfaces.model.game.IGame;
+import com.whyx.openchess.interfaces.model.piece.IPieceTeam;
 import com.whyx.openchess.interfaces.model.rules.IMove;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 
 import java.util.Set;
 
@@ -22,12 +24,14 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class GameAcceptanceTest {
 
     @Test
-    void kingCanMoveForwardTest() {
+    void kingCanMoveForwardTest(@Mock final IPieceTeam pieceTeam) {
 
         final int startX = 0;
         final int startY = 0;
 
-        final King king = new King();
+        final King king = King.builder()
+                .withPieceTeam(pieceTeam)
+                .build();
 
         final TwoDimensionalLocation startLocation = TwoDimensionalLocation.builder()
                 .withXSupplier(() -> startX)
