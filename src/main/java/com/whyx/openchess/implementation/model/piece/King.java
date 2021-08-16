@@ -39,4 +39,8 @@ public class King extends TwoDimensionalChessPiece {
     public IPieceTeam getTeam() {
         return null;
     }
+
+    public static class KingBuilder {
+
+    }
 }

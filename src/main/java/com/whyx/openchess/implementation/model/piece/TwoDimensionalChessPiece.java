@@ -8,4 +8,5 @@ import com.whyx.openchess.interfaces.model.piece.IPiece;
  * Class representing a piece in 2D chess.
  */
 public abstract class TwoDimensionalChessPiece implements IPiece<TwoDimensionalLocation> {
+
 }
