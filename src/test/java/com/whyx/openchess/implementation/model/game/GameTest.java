@@ -99,8 +99,8 @@ public class GameTest {
             @Test
             void isMoveLegalStartNotOnBoardTest(
                     @Mock final IPiece<ILocation> piece,
-                    @Mock final ICell<ILocation> start,
-                    @Mock final IMove<ILocation> move
+                    @Mock final IMove<ILocation> move,
+                    @Mock final ICell<ILocation> start
             ) {
                 given(move.getStart()).willReturn(start);
 
@@ -116,6 +116,7 @@ public class GameTest {
                     @Mock final IMove<ILocation> move
             ) {
                 given(move.getStart()).willReturn(start);
+                given(board.containsCell(start)).willReturn(true);
 
                 assertThatThrownBy(() -> game.isMoveLegal(piece, move))
                         .isExactlyInstanceOf(CellNotFoundException.class)
@@ -133,6 +134,25 @@ public class GameTest {
                 given(move.getDestination()).willReturn(destination);
                 given(board.containsCell(start)).willReturn(true);
                 given(board.containsCell(destination)).willReturn(true);
+
+                assertThatThrownBy(() -> game.isMoveLegal(piece, move))
+                        .isExactlyInstanceOf(PieceNotFoundException.class)
+                        .hasMessage("piece not found");
+            }
+
+            @Test
+            void isMoveLegalWrongPieceOnStartTest(
+                    @Mock final IPiece<ILocation> piece,
+                    @Mock final IPiece<ILocation> wrongPiece,
+                    @Mock final ICell<ILocation> start,
+                    @Mock final ICell<ILocation> destination,
+                    @Mock final IMove<ILocation> move
+            ) {
+                given(move.getStart()).willReturn(start);
+                given(move.getDestination()).willReturn(destination);
+                given(board.containsCell(start)).willReturn(true);
+                given(board.containsCell(destination)).willReturn(true);
+                given(start.getPiece()).willReturn(Optional.of(wrongPiece));
 
                 assertThatThrownBy(() -> game.isMoveLegal(piece, move))
                         .isExactlyInstanceOf(PieceNotFoundException.class)

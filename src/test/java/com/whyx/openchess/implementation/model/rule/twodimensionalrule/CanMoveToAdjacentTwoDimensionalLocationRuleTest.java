@@ -71,13 +71,27 @@ class CanMoveToAdjacentTwoDimensionalLocationRuleTest {
         }
 
         @Test
-        void cannotMoveMoreThanOneSquare() {
+        void tooFarInXDirectionTest() {
             given(move.getStart()).willReturn(start);
             given(move.getDestination()).willReturn(destination);
             given(start.getLocation()).willReturn(startLocation);
             given(destination.getLocation()).willReturn(destinationLocation);
             given(startLocation.getX()).willReturn(START_X);
             given(destinationLocation.getX()).willReturn(START_X + 2);
+
+            assertThat(rule.moveConformsToRule(move, piece, board)).isFalse();
+        }
+
+        @Test
+        void tooFarInYDirectionTest() {
+            given(move.getStart()).willReturn(start);
+            given(move.getDestination()).willReturn(destination);
+            given(start.getLocation()).willReturn(startLocation);
+            given(destination.getLocation()).willReturn(destinationLocation);
+            given(startLocation.getX()).willReturn(START_X);
+            given(destinationLocation.getX()).willReturn(START_X);
+            given(startLocation.getY()).willReturn(START_Y);
+            given(startLocation.getY()).willReturn(START_Y + 2);
 
             assertThat(rule.moveConformsToRule(move, piece, board)).isFalse();
         }
