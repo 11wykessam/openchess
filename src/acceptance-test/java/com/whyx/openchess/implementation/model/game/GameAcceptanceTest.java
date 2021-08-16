@@ -11,7 +11,9 @@ import com.whyx.openchess.interfaces.model.game.IGame;
 import com.whyx.openchess.interfaces.model.piece.IPieceTeam;
 import com.whyx.openchess.interfaces.model.rules.IMove;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Set;
 
@@ -21,6 +23,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  * @author Sam Wykes.
  * Integration tests for the {@link Game} class.
  */
+@ExtendWith(MockitoExtension.class)
 public class GameAcceptanceTest {
 
     @Test

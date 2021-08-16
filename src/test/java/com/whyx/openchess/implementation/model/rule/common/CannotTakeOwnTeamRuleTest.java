@@ -63,11 +63,11 @@ class CannotTakeOwnTeamRuleTest {
                 @Mock final IBoard<ILocation> board
         ) {
             given(move.getDestination()).willReturn(destination);
-            given(destination.getPiece()).willReturn(Optional.ofNullable(destinationPiece));
+            given(destination.getPiece()).willReturn(Optional.of(destinationPiece));
             given(destinationPiece.getTeam()).willReturn(destinationTeam);
             given(piece.getTeam()).willReturn(team);
 
-            assertThat(rule.moveConformsToRule(move, piece, board)).isFalse();
+            assertThat(rule.moveConformsToRule(move, piece, board)).isTrue();
         }
 
     }
