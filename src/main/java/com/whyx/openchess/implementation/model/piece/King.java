@@ -66,18 +66,10 @@ public class King extends TwoDimensionalChessPiece {
      * @author Sam Wykes.
      * Class used to construct {@link King} objects.
      */
-    public static class KingBuilder {
-
-        private IPieceTeam pieceTeam;
-
-        public KingBuilder withPieceTeam(final IPieceTeam pieceTeam) {
-            requireNonNull(pieceTeam, "pieceTeam must not be null");
-            this.pieceTeam = pieceTeam;
-            return this;
-        }
+    public static class KingBuilder extends TwoDimensionalChessPieceBuilder<King> {
 
         public King build() {
-            requireNonNull(pieceTeam, "pieceTeam must not be null");
+            requireNonNull(this.pieceTeam, "pieceTeam must not be null");
             return new King(this);
         }
     }
