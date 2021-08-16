@@ -1,5 +1,7 @@
 package com.whyx.openchess.implementation.model.piece;
 
+import com.whyx.openchess.implementation.exceptions.CellNotFoundException;
+import com.whyx.openchess.implementation.exceptions.PieceNotFoundException;
 import com.whyx.openchess.implementation.model.board.Board;
 import com.whyx.openchess.implementation.model.board.Cell;
 import com.whyx.openchess.implementation.model.board.location.TwoDimensionalLocation;
@@ -23,6 +25,7 @@ import java.util.Set;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.BDDMockito.given;
 
 /**
@@ -37,7 +40,7 @@ public class KingAcceptanceTest {
 
     @ParameterizedTest
     @MethodSource("legalMoveStream")
-    void kingCanMoveToAdjacentTiles(final int xOffset, final int yOffset) {
+    void canMoveToAdjacentTiles(final int xOffset, final int yOffset) {
 
         final int startX = 0;
         final int startY = 0;
@@ -169,6 +172,93 @@ public class KingAcceptanceTest {
                 .build();
 
         assertThat(game.isMoveLegal(king, move)).isFalse();
+    }
+
+    @Test
+    void cannotMoveOffBoardTest() {
+        final int startX = 0;
+        final int startY = 0;
+
+        final King king = King.builder()
+                .withPieceTeam(pieceTeam)
+                .build();
+
+        final TwoDimensionalLocation startLocation = TwoDimensionalLocation.builder()
+                .withXSupplier(() -> startX)
+                .withYSupplier(() -> startY)
+                .build();
+
+        final TwoDimensionalLocation destinationLocation = TwoDimensionalLocation.builder()
+                .withXSupplier(() -> startX + 1)
+                .withYSupplier(() -> startY)
+                .build();
+
+        final ICell<TwoDimensionalLocation> start = Cell.<TwoDimensionalLocation>builder()
+                .withPiece(king)
+                .withLocation(startLocation)
+                .build();
+        final ICell<TwoDimensionalLocation> end = Cell.<TwoDimensionalLocation>builder()
+                .withLocation(destinationLocation)
+                .build();
+
+        final IBoard<TwoDimensionalLocation> board = Board.<TwoDimensionalLocation>builder()
+                .withCells(Set.of(start))
+                .build();
+
+        final IGame<TwoDimensionalLocation> game = Game.<TwoDimensionalLocation>builder()
+                .withBoard(board)
+                .build();
+
+        final IMove<TwoDimensionalLocation> move = Move.<TwoDimensionalLocation>builder()
+                .withStart(start)
+                .withDestination(end)
+                .build();
+
+        assertThatThrownBy(() -> game.isMoveLegal(king, move))
+                .isExactlyInstanceOf(CellNotFoundException.class);
+    }
+
+    @Test
+    void kingNotOnStartTest() {
+        final int startX = 0;
+        final int startY = 0;
+
+        final King king = King.builder()
+                .withPieceTeam(pieceTeam)
+                .build();
+
+        final TwoDimensionalLocation startLocation = TwoDimensionalLocation.builder()
+                .withXSupplier(() -> startX)
+                .withYSupplier(() -> startY)
+                .build();
+
+        final TwoDimensionalLocation destinationLocation = TwoDimensionalLocation.builder()
+                .withXSupplier(() -> startX + 1)
+                .withYSupplier(() -> startY)
+                .build();
+
+        final ICell<TwoDimensionalLocation> start = Cell.<TwoDimensionalLocation>builder()
+                .withLocation(startLocation)
+                .build();
+        final ICell<TwoDimensionalLocation> end = Cell.<TwoDimensionalLocation>builder()
+                .withLocation(destinationLocation)
+                .build();
+
+        final IBoard<TwoDimensionalLocation> board = Board.<TwoDimensionalLocation>builder()
+                .withCells(Set.of(start, end))
+                .build();
+
+        final IGame<TwoDimensionalLocation> game = Game.<TwoDimensionalLocation>builder()
+                .withBoard(board)
+                .build();
+
+        final IMove<TwoDimensionalLocation> move = Move.<TwoDimensionalLocation>builder()
+                .withStart(start)
+                .withDestination(end)
+                .build();
+
+        assertThatThrownBy(() -> game.isMoveLegal(king, move))
+                .isExactlyInstanceOf(PieceNotFoundException.class);
     }
 
     private static Stream<Arguments> legalMoveStream() {
