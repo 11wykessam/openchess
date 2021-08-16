@@ -28,6 +28,9 @@ class CanMoveInUnobstructedStraightLineRuleTest {
     @Nested
     class Functionality {
 
+        private final Integer DEFAULT_Y = 6;
+        private final Integer DEFAULT_X = 5;
+
         private CanMoveInUnobstructedStraightLineRule rule;
 
         @BeforeEach
@@ -197,6 +200,72 @@ class CanMoveInUnobstructedStraightLineRuleTest {
             given(destinationLocation.getX()).willReturn(2);
             given(destinationLocation.getY()).willReturn(0);
             given(board.getCells()).willReturn(Stream.of(startCell, destinationCell));
+
+            assertThat(rule.moveConformsToRule(move, piece, board)).isFalse();
+        }
+
+        @Test
+        void canMoveInVerticalLineTest(
+                @Mock final IMove<TwoDimensionalLocation> move,
+                @Mock final ICell<TwoDimensionalLocation> startCell,
+                @Mock final ICell<TwoDimensionalLocation> destinationCell,
+                @Mock final TwoDimensionalLocation startLocation,
+                @Mock final TwoDimensionalLocation destinationLocation,
+                @Mock final IPiece<TwoDimensionalLocation> piece,
+                @Mock final IBoard<TwoDimensionalLocation> board
+        ) {
+            given(move.getStart()).willReturn(startCell);
+            given(move.getDestination()).willReturn(destinationCell);
+            given(startCell.getLocation()).willReturn(startLocation);
+            given(destinationCell.getLocation()).willReturn(destinationLocation);
+            given(startLocation.getX()).willReturn(DEFAULT_X);
+            given(startLocation.getY()).willReturn(DEFAULT_Y);
+            given(destinationLocation.getX()).willReturn(DEFAULT_X);
+            given(destinationLocation.getY()).willReturn(DEFAULT_Y + 1);
+
+            assertThat(rule.moveConformsToRule(move, piece, board)).isTrue();
+        }
+
+        @Test
+        void canMoveInHorizontalLineTest(
+                @Mock final IMove<TwoDimensionalLocation> move,
+                @Mock final ICell<TwoDimensionalLocation> startCell,
+                @Mock final ICell<TwoDimensionalLocation> destinationCell,
+                @Mock final TwoDimensionalLocation startLocation,
+                @Mock final TwoDimensionalLocation destinationLocation,
+                @Mock final IPiece<TwoDimensionalLocation> piece,
+                @Mock final IBoard<TwoDimensionalLocation> board
+        ) {
+            given(move.getStart()).willReturn(startCell);
+            given(move.getDestination()).willReturn(destinationCell);
+            given(startCell.getLocation()).willReturn(startLocation);
+            given(destinationCell.getLocation()).willReturn(destinationLocation);
+            given(startLocation.getX()).willReturn(DEFAULT_X);
+            given(destinationLocation.getX()).willReturn(DEFAULT_X + 1);
+            given(startLocation.getY()).willReturn(DEFAULT_Y);
+            given(destinationLocation.getY()).willReturn(DEFAULT_Y);
+
+            assertThat(rule.moveConformsToRule(move, piece, board)).isTrue();
+        }
+
+        @Test
+        void cannotMoveIfNotInStraightLineTest(
+                @Mock final IMove<TwoDimensionalLocation> move,
+                @Mock final ICell<TwoDimensionalLocation> startCell,
+                @Mock final ICell<TwoDimensionalLocation> destinationCell,
+                @Mock final TwoDimensionalLocation startLocation,
+                @Mock final TwoDimensionalLocation destinationLocation,
+                @Mock final IPiece<TwoDimensionalLocation> piece,
+                @Mock final IBoard<TwoDimensionalLocation> board
+        ) {
+            given(move.getStart()).willReturn(startCell);
+            given(move.getDestination()).willReturn(destinationCell);
+            given(startCell.getLocation()).willReturn(startLocation);
+            given(destinationCell.getLocation()).willReturn(destinationLocation);
+            given(startLocation.getX()).willReturn(DEFAULT_X);
+            given(destinationLocation.getX()).willReturn(DEFAULT_X + 1);
+            given(startLocation.getY()).willReturn(DEFAULT_Y);
+            given(destinationLocation.getY()).willReturn(DEFAULT_Y + 1);
 
             assertThat(rule.moveConformsToRule(move, piece, board)).isFalse();
         }
