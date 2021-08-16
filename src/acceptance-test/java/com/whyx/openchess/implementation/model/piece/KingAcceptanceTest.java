@@ -8,6 +8,7 @@ import com.whyx.openchess.implementation.model.rule.Move;
 import com.whyx.openchess.interfaces.model.board.IBoard;
 import com.whyx.openchess.interfaces.model.board.ICell;
 import com.whyx.openchess.interfaces.model.game.IGame;
+import com.whyx.openchess.interfaces.model.piece.IPiece;
 import com.whyx.openchess.interfaces.model.piece.IPieceTeam;
 import com.whyx.openchess.interfaces.model.rules.IMove;
 import org.junit.jupiter.api.Test;
@@ -22,6 +23,7 @@ import java.util.Set;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.BDDMockito.given;
 
 /**
  * @author Sam Wykes.
@@ -121,7 +123,52 @@ public class KingAcceptanceTest {
 
         assertThat(game.isMoveLegal(king, move)).isFalse();
 
+    }
 
+    @Test
+    void destinationOccupiedTest(@Mock final IPiece<TwoDimensionalLocation> opponent) {
+        final int startX = 0;
+        final int startY = 0;
+
+        given(opponent.getTeam()).willReturn(pieceTeam);
+
+        final King king = King.builder()
+                .withPieceTeam(pieceTeam)
+                .build();
+
+        final TwoDimensionalLocation startLocation = TwoDimensionalLocation.builder()
+                .withXSupplier(() -> startX)
+                .withYSupplier(() -> startY)
+                .build();
+
+        final TwoDimensionalLocation destinationLocation = TwoDimensionalLocation.builder()
+                .withXSupplier(() -> startX + 1)
+                .withYSupplier(() -> startY)
+                .build();
+
+        final ICell<TwoDimensionalLocation> start = Cell.<TwoDimensionalLocation>builder()
+                .withPiece(king)
+                .withLocation(startLocation)
+                .build();
+        final ICell<TwoDimensionalLocation> end = Cell.<TwoDimensionalLocation>builder()
+                .withPiece(opponent)
+                .withLocation(destinationLocation)
+                .build();
+
+        final IBoard<TwoDimensionalLocation> board = Board.<TwoDimensionalLocation>builder()
+                .withCells(Set.of(start, end))
+                .build();
+
+        final IGame<TwoDimensionalLocation> game = Game.<TwoDimensionalLocation>builder()
+                .withBoard(board)
+                .build();
+
+        final IMove<TwoDimensionalLocation> move = Move.<TwoDimensionalLocation>builder()
+                .withStart(start)
+                .withDestination(end)
+                .build();
+
+        assertThat(game.isMoveLegal(king, move)).isFalse();
     }
 
     private static Stream<Arguments> legalMoveStream() {

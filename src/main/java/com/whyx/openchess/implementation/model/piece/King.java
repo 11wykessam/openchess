@@ -2,6 +2,7 @@ package com.whyx.openchess.implementation.model.piece;
 
 import com.whyx.openchess.implementation.model.board.location.TwoDimensionalLocation;
 import com.whyx.openchess.implementation.model.rule.RuleBook;
+import com.whyx.openchess.implementation.model.rule.common.CannotTakeOwnTeamRule;
 import com.whyx.openchess.implementation.model.rule.common.HasToMoveRule;
 import com.whyx.openchess.implementation.model.rule.twodimensionalrule.CanMoveToAdjacentTwoDimensionalLocationRule;
 import com.whyx.openchess.interfaces.model.piece.IPieceTeam;
@@ -34,6 +35,7 @@ public class King extends TwoDimensionalChessPiece {
 
         final Set<IRule<TwoDimensionalLocation>> ruleSet = Set.of(
                 new HasToMoveRule<>(),
+                new CannotTakeOwnTeamRule<>(),
                 new CanMoveToAdjacentTwoDimensionalLocationRule()
         );
 
