@@ -55,6 +55,27 @@ class CanMoveInStraightLineRuleTest {
             assertThat(rule.moveConformsToRule(move, piece, board)).isTrue();
         }
 
+        @Test
+        void canMoveInHorizontalLineTest(
+                @Mock final IMove<TwoDimensionalLocation> move,
+                @Mock final ICell<TwoDimensionalLocation> startCell,
+                @Mock final ICell<TwoDimensionalLocation> destinationCell,
+                @Mock final TwoDimensionalLocation startLocation,
+                @Mock final TwoDimensionalLocation destinationLocation,
+                @Mock final IPiece<TwoDimensionalLocation> piece,
+                @Mock final IBoard<TwoDimensionalLocation> board
+        ) {
+            given(move.getStart()).willReturn(startCell);
+            given(move.getDestination()).willReturn(destinationCell);
+            given(startCell.getLocation()).willReturn(startLocation);
+            given(destinationCell.getLocation()).willReturn(destinationLocation);
+            given(startLocation.getX()).willReturn(DEFAULT_X);
+            given(destinationLocation.getX()).willReturn(DEFAULT_X + 6);
+            given(startLocation.getY()).willReturn(DEFAULT_Y);
+            given(destinationLocation.getY()).willReturn(DEFAULT_Y);
+
+            assertThat(rule.moveConformsToRule(move, piece, board)).isTrue();
+        }
     }
 
 }
