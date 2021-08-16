@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>com.whyx</groupId>
 	<artifactId>openchess</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.0.1</version>
 	<name>openchess</name>
 	<description>Open Source Chess Server</description>
 	<properties>
