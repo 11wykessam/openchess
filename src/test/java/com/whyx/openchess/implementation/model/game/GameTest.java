@@ -1,6 +1,7 @@
 package com.whyx.openchess.implementation.model.game;
 
 import com.whyx.openchess.implementation.exceptions.CellNotFoundException;
+import com.whyx.openchess.implementation.exceptions.PieceNotFoundException;
 import com.whyx.openchess.implementation.model.rule.Move;
 import com.whyx.openchess.interfaces.model.board.IBoard;
 import com.whyx.openchess.interfaces.model.board.ICell;
@@ -17,6 +18,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.Optional;
 import java.util.stream.Stream;
 
 import static com.whyx.openchess.implementation.model.game.Game.GameBuilder;
@@ -124,13 +126,17 @@ public class GameTest {
             void isMoveLegalPieceNotOnStartTest(
                     @Mock final IPiece<ILocation> piece,
                     @Mock final ICell<ILocation> start,
+                    @Mock final ICell<ILocation> destination,
                     @Mock final IMove<ILocation> move
             ) {
                 given(move.getStart()).willReturn(start);
+                given(move.getDestination()).willReturn(destination);
+                given(board.containsCell(start)).willReturn(true);
+                given(board.containsCell(destination)).willReturn(true);
 
                 assertThatThrownBy(() -> game.isMoveLegal(piece, move))
-                        .isExactlyInstanceOf(CellNotFoundException.class)
-                        .hasMessage("cell not found");
+                        .isExactlyInstanceOf(PieceNotFoundException.class)
+                        .hasMessage("piece not found");
             }
         }
 
@@ -191,6 +197,7 @@ public class GameTest {
             given(rule.moveConformsToRule(move, piece, board)).willReturn(true);
             given(move.getStart()).willReturn(start);
             given(move.getDestination()).willReturn(destination);
+            given(start.getPiece()).willReturn(Optional.of(piece));
             given(board.containsCell(start)).willReturn(true);
             given(board.containsCell(destination)).willReturn(true);
 

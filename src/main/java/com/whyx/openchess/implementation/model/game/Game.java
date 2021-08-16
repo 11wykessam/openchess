@@ -78,7 +78,7 @@ public class Game<T extends ILocation> implements IGame<T> {
      * @return boolean.
      */
     private boolean pieceOnMoveStart(final IPiece<T> piece, final IMove<T> move) {
-        return !(move.getStart().getPiece().isPresent() && move.getStart().getPiece().get().equals(piece));
+        return move.getStart().getPiece().isPresent() && move.getStart().getPiece().get().equals(piece);
     }
 
     /**
