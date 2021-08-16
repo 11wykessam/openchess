@@ -54,6 +54,7 @@ public class GameAcceptanceTest {
                 .build();
 
         final ICell<TwoDimensionalLocation> start = Cell.<TwoDimensionalLocation>builder()
+                .withPiece(king)
                 .withLocation(startLocation)
                 .build();
         final ICell<TwoDimensionalLocation> end = Cell.<TwoDimensionalLocation>builder()
