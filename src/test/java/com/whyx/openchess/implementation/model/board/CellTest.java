@@ -1,7 +1,9 @@
 package com.whyx.openchess.implementation.model.board;
 
+import com.whyx.openchess.implementation.model.board.Cell.CellBuilder;
 import com.whyx.openchess.interfaces.model.board.ICell;
-import com.whyx.openchess.interfaces.model.board.ICellState;
+import com.whyx.openchess.interfaces.model.board.ILocation;
+import com.whyx.openchess.interfaces.model.piece.IPiece;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -18,122 +20,126 @@ import static org.assertj.core.api.Assumptions.assumeThat;
  * Class used to test the {@link Cell} class.
  */
 @ExtendWith(MockitoExtension.class)
-public class CellTest {
+class CellTest {
 
-    // default values.
-    private static final int DEFAULT_X = 1;
-    private static final int DEFAULT_Y = 1;
-
+    /**
+     * @author Sam Wykes.
+     * Tests the preconditions of the {@link Cell} class.
+     */
     @Nested
     class Preconditions {
 
-        private Cell.CellBuilder builder;
+        @Nested
+        class BuildPreconditions {
 
-        @BeforeEach
-        void setup() {
-            builder = Cell.builder();
-            assumeThat(builder).isNotNull();
+            private CellBuilder<ILocation> builder;
+
+            @BeforeEach
+            void setup() {
+                builder = Cell.builder();
+                assumeThat(builder).isNotNull();
+            }
+
+            @Test
+            void pieceNotNullTest() {
+                assertThatNullPointerException()
+                        .isThrownBy(() -> builder.withPiece(null))
+                        .withMessage("piece must not be null");
+            }
+
+            @Test
+            void locationNotNullTest() {
+                assertThatNullPointerException()
+                        .isThrownBy(() -> builder.withLocation(null))
+                        .withMessage("location must not be null");
+            }
+
+            @Test
+            void locationMustBePresentTest() {
+                assertThatNullPointerException()
+                        .isThrownBy(() -> builder.build())
+                        .withMessage("location must not be null");
+            }
+
         }
-
-        @Test
-        void cellStateMustNotBeNullTest() {
-            assertThatNullPointerException()
-                    .isThrownBy(() -> builder
-                            .withCellState(null)
-                    ).withMessage("cellState must not be null");
-        }
-
-        @Test
-        void cellStateMustBePresentTest() {
-            assertThatNullPointerException()
-                    .isThrownBy(() -> builder
-                            .withXSupplier(() -> DEFAULT_X)
-                            .withYSupplier(() -> DEFAULT_Y)
-                            .build()
-                    ).withMessage("cellState must not be null");
-        }
-
-        @Test
-        void xSupplierMustNotBeNullTest() {
-            assertThatNullPointerException()
-                    .isThrownBy(() -> builder
-                            .withXSupplier(null)
-                    ).withMessage("xSupplier must not be null");
-        }
-
-        @Test
-        void xSupplierMustBePresentTest(@Mock final ICellState cellState) {
-            assertThatNullPointerException()
-                    .isThrownBy(() -> builder
-                            .withCellState(cellState)
-                            .withYSupplier(() -> DEFAULT_Y)
-                            .build()).withMessage("xSupplier must not be null");
-        }
-
-        @Test
-        void ySupplierMustNotBeNullTest() {
-            assertThatNullPointerException()
-                    .isThrownBy(() -> builder
-                            .withYSupplier(null)
-                    ).withMessage("ySupplier must not be null");
-        }
-
-        @Test
-        void ySupplierMustBePresentTest(@Mock final ICellState cellState) {
-            assertThatNullPointerException()
-                    .isThrownBy(() -> builder
-                            .withCellState(cellState)
-                            .withXSupplier(() -> DEFAULT_X)
-                            .build()).withMessage("ySupplier must not be null");
-        }
-
 
     }
 
+    /**
+     * @author Sam Wykes.
+     * Tests that the class is built correctly.
+     */
     @Nested
     class Build {
 
-        private ICell cell;
-
-        @Mock
-        private ICellState cellState;
-
-        @BeforeEach
-        void setup() {
-            cell = Cell.builder()
-                    .withCellState(cellState)
-                    .withXSupplier(() -> DEFAULT_X)
-                    .withYSupplier(() -> DEFAULT_Y)
+        @Test
+        void cellNotNullTest(@Mock final ILocation location) {
+            final ICell<ILocation> cell = Cell.builder()
+                    .withLocation(location)
                     .build();
-            // assume that cell builds correctly.
-            assumeThat(cell).isNotNull();
+            assertThat(cell).isNotNull();
         }
 
         @Test
-        void builderNotNullTest() {
-            assertThat(Cell.builder()).isNotNull();
+        void pieceOptionalNotNullWhenProvidedTest(@Mock final IPiece<ILocation> piece, @Mock final ILocation location) {
+            final ICell<ILocation> cell = Cell.builder()
+                    .withPiece(piece)
+                    .withLocation(location)
+                    .build();
+            assertThat(cell.getPiece()).isNotNull();
         }
 
         @Test
-        void getCellStateNotNullTest() {
-            assertThat(cell.getState()).isNotNull();
+        void pieceOptionalPresentWhenProvidedTest(@Mock final IPiece<ILocation> piece, @Mock final ILocation location) {
+            final ICell<ILocation> cell = Cell.builder()
+                    .withPiece(piece)
+                    .withLocation(location)
+                    .build();
+            assertThat(cell.getPiece().isPresent()).isTrue();
+        }
+
+        @SuppressWarnings("OptionalGetWithoutIsPresent")
+        @Test
+        void getPieceWhenProvidedTest(@Mock final IPiece<ILocation> piece, @Mock final ILocation location) {
+            final ICell<ILocation> cell = Cell.builder()
+                    .withPiece(piece)
+                    .withLocation(location)
+                    .build();
+            assertThat(cell.getPiece().get()).isSameAs(piece);
         }
 
         @Test
-        void getCellStateTest() {
-            assumeThat(cell.getState()).isNotNull();
-            assertThat(cell.getState()).isSameAs(cellState);
+        void pieceOptionalNotNullWhenNotProvidedTest(@Mock final ILocation location) {
+            final ICell<ILocation> cell = Cell.builder()
+                    .withLocation(location)
+                    .build();
+            assertThat(cell.getPiece()).isNotNull();
         }
 
         @Test
-        void getXTest() {
-            assertThat(cell.getX()).isEqualTo(DEFAULT_X);
+        void pieceOptionalEmptyWhenNotProvidedTest(@Mock final ILocation location) {
+            final ICell<ILocation> cell = Cell.builder()
+                    .withLocation(location)
+                    .build();
+            assertThat(cell.getPiece().isEmpty()).isTrue();
         }
 
         @Test
-        void getYTest() {
-            assertThat(cell.getY()).isEqualTo(DEFAULT_Y);
+        void locationNotNullTest(@Mock final ILocation location) {
+            final ICell<ILocation> cell = Cell.builder()
+                    .withLocation(location)
+                    .build();
+            assertThat(cell.getLocation()).isNotNull();
         }
+
+        @Test
+        void getLocationTest(@Mock final ILocation location) {
+            final ICell<ILocation> cell = Cell.builder()
+                    .withLocation(location)
+                    .build();
+            assertThat(cell.getLocation()).isSameAs(location);
+        }
+
 
     }
 

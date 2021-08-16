@@ -1,25 +1,27 @@
 package com.whyx.openchess.interfaces.model.piece;
 
-import com.whyx.openchess.interfaces.common.PieceColour;
+import com.whyx.openchess.interfaces.model.board.ILocation;
+import com.whyx.openchess.interfaces.model.rules.IRuleBook;
 
 /**
- * @author Sam Wykes
- * Interface representing a pice in a game of chess.
+ * @param <T> The type of location being used in the board game.
+ * @author Sam Wykes.
+ * Interface representing a piece in a board game.
  */
-public interface IPiece {
+public interface IPiece<T extends ILocation> {
 
     /**
-     * Get the state of the piece.
+     * Get the rule book associated with the piece.
      *
-     * @return {@link IPieceState} object.
+     * @return {@link IRuleBook} object.
      */
-    IPieceState getState();
+    IRuleBook<T> getRuleBook();
 
     /**
-     * Get the colour of the piece.
+     * Get the team associated with the given piece.
      *
-     * @return {@link PieceColour} enum.
+     * @return {@link IPieceTeam} object.
      */
-    PieceColour getColour();
+    IPieceTeam getTeam();
 
 }

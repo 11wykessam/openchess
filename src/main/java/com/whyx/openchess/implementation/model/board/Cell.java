@@ -1,100 +1,85 @@
 package com.whyx.openchess.implementation.model.board;
 
-import com.whyx.openchess.interfaces.common.Builder;
 import com.whyx.openchess.interfaces.model.board.ICell;
-import com.whyx.openchess.interfaces.model.board.ICellState;
+import com.whyx.openchess.interfaces.model.board.ILocation;
+import com.whyx.openchess.interfaces.model.piece.IPiece;
 
-import java.util.function.Supplier;
+import java.util.Optional;
 
 import static java.util.Objects.requireNonNull;
 
 /**
- * @author Sam Wykes
- * Class representing a cell in chess.
+ * @param <T> The type of location being stored by the cell.
+ * @author Sam Wykes.
+ * Class that represents a cell in a board game.
  */
-public class Cell implements ICell {
+public class Cell<T extends ILocation> implements ICell<T> {
 
-    private final ICellState cellState;
-    private final int x;
-    private final int y;
+    private final IPiece<T> piece;
+    private final T location;
 
-    public Cell(CellBuilder builder) {
-        this.cellState = builder.cellState;
-        this.x = builder.xSupplier.get();
-        this.y = builder.ySupplier.get();
+    /**
+     * @param builder The builder being used to create the object.
+     */
+    private Cell(final CellBuilder<T> builder) {
+        this.piece = builder.piece;
+        this.location = builder.location;
     }
 
     /**
-     * Getter for cellState.
+     * Get the piece on the cell, if present.
      *
-     * @return The {@link CellState} of the cell.
+     * @return {@link Optional} object that may contain a {@link IPiece} object.
      */
     @Override
-    public ICellState getState() {
-        return this.cellState;
+    public Optional<IPiece<T>> getPiece() {
+        return Optional.ofNullable(piece);
     }
 
     /**
-     * Getter for x.
+     * Get the location of the cell.
      *
-     * @return int.
+     * @return {@link ILocation} object.
      */
     @Override
-    public int getX() {
-        return this.x;
+    public T getLocation() {
+        return this.location;
     }
 
     /**
-     * Getter for y.
+     * Create an instance of the builder.
      *
-     * @return int.
+     * @return {@link CellBuilder} object.
      */
-    @Override
-    public int getY() {
-        return this.y;
+    public static <U extends ILocation> CellBuilder<U> builder() {
+        return new CellBuilder<>();
     }
 
     /**
-     * Return a builder object.
-     *
-     * @return {@link Builder} object.
+     * @param <U> The type of location being stored by the cells being built.
+     * @author Sam Wykes.
+     * Class responsible for producing {@link Cell} instances.
      */
-    public static CellBuilder builder() {
-        return new CellBuilder();
-    }
+    public static class CellBuilder<U extends ILocation> {
 
-    /**
-     * Builder class for {@link Cell}.
-     */
-    static class CellBuilder implements Builder<ICell> {
+        private IPiece<U> piece;
+        private U location;
 
-        private ICellState cellState;
-        private Supplier<Integer> xSupplier;
-        private Supplier<Integer> ySupplier;
-
-        public Cell build() {
-            requireNonNull(cellState, "cellState must not be null");
-            requireNonNull(xSupplier, "xSupplier must not be null");
-            requireNonNull(ySupplier, "ySupplier must not be null");
-            return new Cell(this);
-        }
-
-        public CellBuilder withCellState(ICellState cellState) {
-            requireNonNull(cellState, "cellState must not be null");
-            this.cellState = cellState;
+        public CellBuilder<U> withPiece(final IPiece<U> piece) {
+            requireNonNull(piece, "piece must not be null");
+            this.piece = piece;
             return this;
         }
 
-        public CellBuilder withXSupplier(Supplier<Integer> xSupplier) {
-            requireNonNull(xSupplier, "xSupplier must not be null");
-            this.xSupplier = xSupplier;
+        public CellBuilder<U> withLocation(final U location) {
+            requireNonNull(location, "location must not be null");
+            this.location = location;
             return this;
         }
 
-        public CellBuilder withYSupplier(Supplier<Integer> ySupplier) {
-            requireNonNull(ySupplier, "ySupplier must not be null");
-            this.ySupplier = ySupplier;
-            return this;
+        public ICell<U> build() {
+            requireNonNull(location, "location must not be null");
+            return new Cell<>(this);
         }
     }
 }
