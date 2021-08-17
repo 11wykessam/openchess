@@ -6,13 +6,11 @@ import com.whyx.openchess.implementation.model.board.Board;
 import com.whyx.openchess.implementation.model.board.Cell;
 import com.whyx.openchess.implementation.model.board.location.TwoDimensionalLocation;
 import com.whyx.openchess.implementation.model.game.Game;
-import com.whyx.openchess.implementation.model.rule.Move;
 import com.whyx.openchess.interfaces.model.board.IBoard;
 import com.whyx.openchess.interfaces.model.board.ICell;
 import com.whyx.openchess.interfaces.model.game.IGame;
 import com.whyx.openchess.interfaces.model.piece.IPiece;
 import com.whyx.openchess.interfaces.model.piece.IPieceTeam;
-import com.whyx.openchess.interfaces.model.rules.IMove;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -63,24 +61,19 @@ public class KingAcceptanceTest {
                 .withPiece(king)
                 .withLocation(startLocation)
                 .build();
-        final ICell<TwoDimensionalLocation> end = Cell.<TwoDimensionalLocation>builder()
+        final ICell<TwoDimensionalLocation> destination = Cell.<TwoDimensionalLocation>builder()
                 .withLocation(destinationLocation)
                 .build();
 
         final IBoard<TwoDimensionalLocation> board = Board.<TwoDimensionalLocation>builder()
-                .withCells(Set.of(start, end))
+                .withCells(Set.of(start, destination))
                 .build();
 
         final IGame<TwoDimensionalLocation> game = Game.<TwoDimensionalLocation>builder()
                 .withBoard(board)
                 .build();
 
-        final IMove<TwoDimensionalLocation> move = Move.<TwoDimensionalLocation>builder()
-                .withStart(start)
-                .withDestination(end)
-                .build();
-
-        assertThat(game.isMoveLegal(king, move)).isTrue();
+        assertThat(game.isMoveLegal(king, start, destination)).isTrue();
     }
 
     @Test
@@ -107,24 +100,19 @@ public class KingAcceptanceTest {
                 .withPiece(king)
                 .withLocation(startLocation)
                 .build();
-        final ICell<TwoDimensionalLocation> end = Cell.<TwoDimensionalLocation>builder()
+        final ICell<TwoDimensionalLocation> destination = Cell.<TwoDimensionalLocation>builder()
                 .withLocation(destinationLocation)
                 .build();
 
         final IBoard<TwoDimensionalLocation> board = Board.<TwoDimensionalLocation>builder()
-                .withCells(Set.of(start, end))
+                .withCells(Set.of(start, destination))
                 .build();
 
         final IGame<TwoDimensionalLocation> game = Game.<TwoDimensionalLocation>builder()
                 .withBoard(board)
                 .build();
 
-        final IMove<TwoDimensionalLocation> move = Move.<TwoDimensionalLocation>builder()
-                .withStart(start)
-                .withDestination(end)
-                .build();
-
-        assertThat(game.isMoveLegal(king, move)).isFalse();
+        assertThat(game.isMoveLegal(king, start, destination)).isFalse();
 
     }
 
@@ -153,25 +141,20 @@ public class KingAcceptanceTest {
                 .withPiece(king)
                 .withLocation(startLocation)
                 .build();
-        final ICell<TwoDimensionalLocation> end = Cell.<TwoDimensionalLocation>builder()
+        final ICell<TwoDimensionalLocation> destination = Cell.<TwoDimensionalLocation>builder()
                 .withPiece(opponent)
                 .withLocation(destinationLocation)
                 .build();
 
         final IBoard<TwoDimensionalLocation> board = Board.<TwoDimensionalLocation>builder()
-                .withCells(Set.of(start, end))
+                .withCells(Set.of(start, destination))
                 .build();
 
         final IGame<TwoDimensionalLocation> game = Game.<TwoDimensionalLocation>builder()
                 .withBoard(board)
                 .build();
 
-        final IMove<TwoDimensionalLocation> move = Move.<TwoDimensionalLocation>builder()
-                .withStart(start)
-                .withDestination(end)
-                .build();
-
-        assertThat(game.isMoveLegal(king, move)).isFalse();
+        assertThat(game.isMoveLegal(king, start, destination)).isFalse();
     }
 
     @Test
@@ -197,7 +180,7 @@ public class KingAcceptanceTest {
                 .withPiece(king)
                 .withLocation(startLocation)
                 .build();
-        final ICell<TwoDimensionalLocation> end = Cell.<TwoDimensionalLocation>builder()
+        final ICell<TwoDimensionalLocation> destination = Cell.<TwoDimensionalLocation>builder()
                 .withLocation(destinationLocation)
                 .build();
 
@@ -209,12 +192,7 @@ public class KingAcceptanceTest {
                 .withBoard(board)
                 .build();
 
-        final IMove<TwoDimensionalLocation> move = Move.<TwoDimensionalLocation>builder()
-                .withStart(start)
-                .withDestination(end)
-                .build();
-
-        assertThatThrownBy(() -> game.isMoveLegal(king, move))
+        assertThatThrownBy(() -> game.isMoveLegal(king, start, destination))
                 .isExactlyInstanceOf(CellNotFoundException.class);
     }
 
@@ -240,24 +218,19 @@ public class KingAcceptanceTest {
         final ICell<TwoDimensionalLocation> start = Cell.<TwoDimensionalLocation>builder()
                 .withLocation(startLocation)
                 .build();
-        final ICell<TwoDimensionalLocation> end = Cell.<TwoDimensionalLocation>builder()
+        final ICell<TwoDimensionalLocation> destination = Cell.<TwoDimensionalLocation>builder()
                 .withLocation(destinationLocation)
                 .build();
 
         final IBoard<TwoDimensionalLocation> board = Board.<TwoDimensionalLocation>builder()
-                .withCells(Set.of(start, end))
+                .withCells(Set.of(start, destination))
                 .build();
 
         final IGame<TwoDimensionalLocation> game = Game.<TwoDimensionalLocation>builder()
                 .withBoard(board)
                 .build();
 
-        final IMove<TwoDimensionalLocation> move = Move.<TwoDimensionalLocation>builder()
-                .withStart(start)
-                .withDestination(end)
-                .build();
-
-        assertThatThrownBy(() -> game.isMoveLegal(king, move))
+        assertThatThrownBy(() -> game.isMoveLegal(king, start, destination))
                 .isExactlyInstanceOf(PieceNotFoundException.class);
     }
 

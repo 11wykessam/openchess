@@ -1,10 +1,9 @@
-package com.whyx.openchess.implementation.model.rule.twodimensionalrule;
+package com.whyx.openchess.implementation.model.rule.moverule.twodimensionalrule;
 
 import com.whyx.openchess.implementation.model.board.location.TwoDimensionalLocation;
 import com.whyx.openchess.interfaces.model.board.IBoard;
 import com.whyx.openchess.interfaces.model.board.ICell;
 import com.whyx.openchess.interfaces.model.piece.IPiece;
-import com.whyx.openchess.interfaces.model.rules.IMove;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -39,8 +38,6 @@ class CanMoveToAdjacentTwoDimensionalLocationRuleTest {
         @Mock
         private ICell<TwoDimensionalLocation> destination;
         @Mock
-        private IMove<TwoDimensionalLocation> move;
-        @Mock
         private IPiece<TwoDimensionalLocation> piece;
         @Mock
         private IBoard<TwoDimensionalLocation> board;
@@ -56,10 +53,8 @@ class CanMoveToAdjacentTwoDimensionalLocationRuleTest {
         }
 
         @ParameterizedTest
-        @MethodSource("com.whyx.openchess.implementation.model.rule.twodimensionalrule.CanMoveToAdjacentTwoDimensionalLocationRuleTest#providePossibleMovementVectors")
+        @MethodSource("com.whyx.openchess.implementation.model.rule.moverule.twodimensionalrule.CanMoveToAdjacentTwoDimensionalLocationRuleTest#providePossibleMovementVectors")
         void canMoveOneOrLessSquares(final int xOffset, final int yOffset) {
-            given(move.getStart()).willReturn(start);
-            given(move.getDestination()).willReturn(destination);
             given(start.getLocation()).willReturn(startLocation);
             given(destination.getLocation()).willReturn(destinationLocation);
             given(startLocation.getX()).willReturn(START_X);
@@ -67,25 +62,21 @@ class CanMoveToAdjacentTwoDimensionalLocationRuleTest {
             given(destinationLocation.getX()).willReturn(START_X + xOffset);
             given(destinationLocation.getY()).willReturn(START_Y + yOffset);
 
-            assertThat(rule.moveConformsToRule(move, piece, board)).isTrue();
+            assertThat(rule.moveConformsToRule(start, destination, piece, board)).isTrue();
         }
 
         @Test
         void tooFarInXDirectionTest() {
-            given(move.getStart()).willReturn(start);
-            given(move.getDestination()).willReturn(destination);
             given(start.getLocation()).willReturn(startLocation);
             given(destination.getLocation()).willReturn(destinationLocation);
             given(startLocation.getX()).willReturn(START_X);
             given(destinationLocation.getX()).willReturn(START_X + 2);
 
-            assertThat(rule.moveConformsToRule(move, piece, board)).isFalse();
+            assertThat(rule.moveConformsToRule(start, destination, piece, board)).isFalse();
         }
 
         @Test
         void tooFarInYDirectionTest() {
-            given(move.getStart()).willReturn(start);
-            given(move.getDestination()).willReturn(destination);
             given(start.getLocation()).willReturn(startLocation);
             given(destination.getLocation()).willReturn(destinationLocation);
             given(startLocation.getX()).willReturn(START_X);
@@ -93,7 +84,7 @@ class CanMoveToAdjacentTwoDimensionalLocationRuleTest {
             given(startLocation.getY()).willReturn(START_Y);
             given(startLocation.getY()).willReturn(START_Y + 2);
 
-            assertThat(rule.moveConformsToRule(move, piece, board)).isFalse();
+            assertThat(rule.moveConformsToRule(start, destination, piece, board)).isFalse();
         }
 
     }

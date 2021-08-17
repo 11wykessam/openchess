@@ -1,6 +1,7 @@
 package com.whyx.openchess.implementation.model.rule;
 
-import com.whyx.openchess.implementation.model.rule.Move.MoveBuilder;
+import com.whyx.openchess.implementation.model.rule.moverule.Move;
+import com.whyx.openchess.implementation.model.rule.moverule.Move.MoveBuilder;
 import com.whyx.openchess.interfaces.model.board.ICell;
 import com.whyx.openchess.interfaces.model.board.ILocation;
 import com.whyx.openchess.interfaces.model.rules.IMove;

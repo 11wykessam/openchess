@@ -1,12 +1,12 @@
 package com.whyx.openchess.implementation.model.piece;
 
 import com.whyx.openchess.implementation.model.board.location.TwoDimensionalLocation;
-import com.whyx.openchess.implementation.model.rule.RuleBook;
-import com.whyx.openchess.implementation.model.rule.common.CannotTakeOwnTeamRule;
-import com.whyx.openchess.implementation.model.rule.common.HasToMoveRule;
-import com.whyx.openchess.implementation.model.rule.twodimensionalrule.CanMoveToAdjacentTwoDimensionalLocationRule;
+import com.whyx.openchess.implementation.model.rule.moverule.RuleBook;
+import com.whyx.openchess.implementation.model.rule.moverule.common.CannotTakeOwnTeamRule;
+import com.whyx.openchess.implementation.model.rule.moverule.common.HasToMoveRule;
+import com.whyx.openchess.implementation.model.rule.moverule.twodimensionalrule.CanMoveToAdjacentTwoDimensionalLocationRule;
 import com.whyx.openchess.interfaces.model.piece.IPieceTeam;
-import com.whyx.openchess.interfaces.model.rules.IRule;
+import com.whyx.openchess.interfaces.model.rules.IMoveRule;
 import com.whyx.openchess.interfaces.model.rules.IRuleBook;
 
 import java.util.Set;
@@ -33,7 +33,7 @@ public class King extends TwoDimensionalChessPiece {
     @Override
     public IRuleBook<TwoDimensionalLocation> getRuleBook() {
 
-        final Set<IRule<TwoDimensionalLocation>> ruleSet = Set.of(
+        final Set<IMoveRule<TwoDimensionalLocation>> ruleSet = Set.of(
                 new HasToMoveRule<>(),
                 new CannotTakeOwnTeamRule<>(),
                 new CanMoveToAdjacentTwoDimensionalLocationRule()

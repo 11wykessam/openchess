@@ -1,8 +1,9 @@
 package com.whyx.openchess.implementation.model.rule;
 
-import com.whyx.openchess.implementation.model.rule.RuleBook.RuleBookBuilder;
+import com.whyx.openchess.implementation.model.rule.moverule.RuleBook;
+import com.whyx.openchess.implementation.model.rule.moverule.RuleBook.RuleBookBuilder;
 import com.whyx.openchess.interfaces.model.board.ILocation;
-import com.whyx.openchess.interfaces.model.rules.IRule;
+import com.whyx.openchess.interfaces.model.rules.IMoveRule;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -63,9 +64,9 @@ class RuleBookTest {
     class Build {
 
         @Mock
-        private IRule<ILocation> ruleOne;
+        private IMoveRule<ILocation> ruleOne;
         @Mock
-        private IRule<ILocation> ruleTwo;
+        private IMoveRule<ILocation> ruleTwo;
 
         private RuleBook<ILocation> ruleBook;
 

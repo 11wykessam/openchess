@@ -1,4 +1,4 @@
-package com.whyx.openchess.implementation.model.rule;
+package com.whyx.openchess.implementation.model.rule.moverule;
 
 import com.whyx.openchess.interfaces.model.board.ICell;
 import com.whyx.openchess.interfaces.model.board.ILocation;

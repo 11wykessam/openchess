@@ -1,12 +1,17 @@
 package com.whyx.openchess.implementation.model.game;
 
 import com.whyx.openchess.implementation.exceptions.CellNotFoundException;
+import com.whyx.openchess.implementation.exceptions.IllegalMoveException;
 import com.whyx.openchess.implementation.exceptions.PieceNotFoundException;
 import com.whyx.openchess.interfaces.model.board.IBoard;
+import com.whyx.openchess.interfaces.model.board.ICell;
 import com.whyx.openchess.interfaces.model.board.ILocation;
 import com.whyx.openchess.interfaces.model.game.IGame;
+import com.whyx.openchess.interfaces.model.game.IGameState;
 import com.whyx.openchess.interfaces.model.piece.IPiece;
 import com.whyx.openchess.interfaces.model.rules.IMove;
+
+import java.util.Set;
 
 import static java.util.Objects.requireNonNull;
 
@@ -37,48 +42,56 @@ public class Game<T extends ILocation> implements IGame<T> {
     }
 
     /**
-     * Check whether a given move is legal.
+     * Checks if a given move is legal.
      *
-     * @param piece The {@link IPiece} being moved.
-     * @param move  The {@link IMove} being made.
+     * @param piece       The {@link IPiece} being moved.
+     * @param start       The {@link ICell} the move is being made from.
+     * @param destination The {@link ICell} the move is being made to.
      * @return boolean.
-     * @throws PieceNotFoundException thrown if the piece is not in the game.
-     * @throws CellNotFoundException  thrown if either the start or destination cell not in the game.
+     * @throws PieceNotFoundException Thrown if the piece is not on the start cell.
+     * @throws CellNotFoundException  Thrown if either the start or destination cell is not on the board.
      */
     @Override
-    public boolean isMoveLegal(final IPiece<T> piece, final IMove<T> move) throws PieceNotFoundException, CellNotFoundException {
+    public boolean isMoveLegal(final IPiece<T> piece, final ICell<T> start, final ICell<T> destination) throws PieceNotFoundException, CellNotFoundException {
         requireNonNull(piece, "piece must not be null");
-        requireNonNull(move, "move must not be null");
+        requireNonNull(start, "start must not be null");
+        requireNonNull(destination, "destination must not be null");
 
         // check both cells are on the board.
-        if (!moveOnBoard(move)) throw new CellNotFoundException();
+        if (!board.containsCell(start) || !board.containsCell(destination)) throw new CellNotFoundException();
 
         // check the piece is on the start.
-        if (!pieceOnMoveStart(piece, move)) throw new PieceNotFoundException();
+        if (start.getPiece().isEmpty() || !start.getPiece().get().equals(piece)) throw new PieceNotFoundException();
 
         return piece.getRuleBook().getRules()
-                .allMatch(rule -> rule.moveConformsToRule(move, piece, this.board));
+                .allMatch(rule -> rule.moveConformsToRule(start, destination, piece, this.board));
+    }
+
+    @Override
+    public IGame<T> makeMove(final IPiece<T> piece, final IMove<T> move) throws IllegalMoveException {
+        return null;
     }
 
     /**
-     * Checks whether the start and end destination of a move are both on the game's board.
+     * Get the possible moves originating from a given cell.
      *
-     * @param move {@link IMove} object.
-     * @return boolean.
+     * @param start The {@link ICell} moves are being made from.
+     * @return {@link Set} containing {@link IMove} objects.
+     * @throws CellNotFoundException Thrown if cell is not on the game's board.
      */
-    private boolean moveOnBoard(final IMove<T> move) {
-        return board.containsCell(move.getStart()) && board.containsCell(move.getDestination());
+    @Override
+    public Set<IMove<T>> getPossibleMovesFromCell(final ICell<T> start) throws CellNotFoundException {
+
+        // check if cell has a piece.
+        if (start.getPiece().isEmpty()) return Set.of();
+
+        final IPiece<T> piece = start.getPiece().get();
+        return null;
     }
 
-    /**
-     * Checks whether a given piece is on the start cell of a move.
-     *
-     * @param piece {@link IPiece} object.
-     * @param move  {@link IMove} object.
-     * @return boolean.
-     */
-    private boolean pieceOnMoveStart(final IPiece<T> piece, final IMove<T> move) {
-        return move.getStart().getPiece().isPresent() && move.getStart().getPiece().get().equals(piece);
+    @Override
+    public IGameState getState() {
+        return null;
     }
 
     /**

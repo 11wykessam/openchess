@@ -1,11 +1,10 @@
-package com.whyx.openchess.implementation.model.rule.common;
+package com.whyx.openchess.implementation.model.rule.moverule.common;
 
 import com.whyx.openchess.interfaces.model.board.IBoard;
 import com.whyx.openchess.interfaces.model.board.ICell;
 import com.whyx.openchess.interfaces.model.board.ILocation;
 import com.whyx.openchess.interfaces.model.piece.IPiece;
 import com.whyx.openchess.interfaces.model.piece.IPieceTeam;
-import com.whyx.openchess.interfaces.model.rules.IMove;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -37,24 +36,23 @@ class CannotTakeOwnTeamRuleTest {
 
         @Test
         void pieceCannotTakeOwnTeamTest(
-                @Mock final IMove<ILocation> move,
+                @Mock final ICell<ILocation> start,
                 @Mock final ICell<ILocation> destination,
                 @Mock final IPiece<ILocation> destinationPiece,
                 @Mock final IPieceTeam team,
                 @Mock final IPiece<ILocation> piece,
                 @Mock final IBoard<ILocation> board
         ) {
-            given(move.getDestination()).willReturn(destination);
             given(destination.getPiece()).willReturn(Optional.ofNullable(destinationPiece));
             given(destinationPiece.getTeam()).willReturn(team);
             given(piece.getTeam()).willReturn(team);
 
-            assertThat(rule.moveConformsToRule(move, piece, board)).isFalse();
+            assertThat(rule.moveConformsToRule(start, destination, piece, board)).isFalse();
         }
 
         @Test
         void pieceCanTakeAnotherTeamTest(
-                @Mock final IMove<ILocation> move,
+                @Mock final ICell<ILocation> start,
                 @Mock final ICell<ILocation> destination,
                 @Mock final IPiece<ILocation> destinationPiece,
                 @Mock final IPieceTeam team,
@@ -62,25 +60,23 @@ class CannotTakeOwnTeamRuleTest {
                 @Mock final IPiece<ILocation> piece,
                 @Mock final IBoard<ILocation> board
         ) {
-            given(move.getDestination()).willReturn(destination);
             given(destination.getPiece()).willReturn(Optional.of(destinationPiece));
             given(destinationPiece.getTeam()).willReturn(destinationTeam);
             given(piece.getTeam()).willReturn(team);
 
-            assertThat(rule.moveConformsToRule(move, piece, board)).isTrue();
+            assertThat(rule.moveConformsToRule(start, destination, piece, board)).isTrue();
         }
 
         @Test
         void pieceCanTakeEmptyCellTest(
-                @Mock final IMove<ILocation> move,
+                @Mock final ICell<ILocation> start,
                 @Mock final ICell<ILocation> destination,
                 @Mock final IPiece<ILocation> piece,
                 @Mock final IBoard<ILocation> board
         ) {
-            given(move.getDestination()).willReturn(destination);
             given(destination.getPiece()).willReturn(Optional.empty());
 
-            assertThat(rule.moveConformsToRule(move, piece, board)).isTrue();
+            assertThat(rule.moveConformsToRule(start, destination, piece, board)).isTrue();
         }
 
     }

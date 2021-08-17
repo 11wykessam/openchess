@@ -14,8 +14,8 @@ public interface IRuleBook<T extends ILocation> {
     /**
      * Get the rules associated with the book.
      *
-     * @return {@link Stream} containing {@link IRule} objects.
+     * @return {@link Stream} containing {@link IMoveRule} objects.
      */
-    Stream<IRule<T>> getRules();
+    Stream<IMoveRule<T>> getRules();
 
 }

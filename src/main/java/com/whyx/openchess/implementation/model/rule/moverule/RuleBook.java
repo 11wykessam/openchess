@@ -1,7 +1,7 @@
-package com.whyx.openchess.implementation.model.rule;
+package com.whyx.openchess.implementation.model.rule.moverule;
 
 import com.whyx.openchess.interfaces.model.board.ILocation;
-import com.whyx.openchess.interfaces.model.rules.IRule;
+import com.whyx.openchess.interfaces.model.rules.IMoveRule;
 import com.whyx.openchess.interfaces.model.rules.IRuleBook;
 
 import java.util.Set;
@@ -16,7 +16,7 @@ import static java.util.Objects.requireNonNull;
  */
 public class RuleBook<T extends ILocation> implements IRuleBook<T> {
 
-    private final Set<IRule<T>> rules;
+    private final Set<IMoveRule<T>> rules;
 
     /**
      * @param ruleBookBuilder object responsible for building object.
@@ -28,10 +28,10 @@ public class RuleBook<T extends ILocation> implements IRuleBook<T> {
     /**
      * Get the rules associated with this rule book.
      *
-     * @return {@link Stream} containing {@link IRule} objects.
+     * @return {@link Stream} containing {@link IMoveRule} objects.
      */
     @Override
-    public Stream<IRule<T>> getRules() {
+    public Stream<IMoveRule<T>> getRules() {
         return this.rules.stream();
     }
 
@@ -51,9 +51,9 @@ public class RuleBook<T extends ILocation> implements IRuleBook<T> {
      */
     public static class RuleBookBuilder<U extends ILocation> {
 
-        public Set<IRule<U>> rules;
+        public Set<IMoveRule<U>> rules;
 
-        public RuleBookBuilder<U> withRules(final Set<IRule<U>> rules) {
+        public RuleBookBuilder<U> withRules(final Set<IMoveRule<U>> rules) {
             requireNonNull(rules, "rules must not be null");
             this.rules = rules;
             return this;

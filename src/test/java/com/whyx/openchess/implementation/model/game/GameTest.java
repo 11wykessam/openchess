@@ -2,14 +2,12 @@ package com.whyx.openchess.implementation.model.game;
 
 import com.whyx.openchess.implementation.exceptions.CellNotFoundException;
 import com.whyx.openchess.implementation.exceptions.PieceNotFoundException;
-import com.whyx.openchess.implementation.model.rule.Move;
 import com.whyx.openchess.interfaces.model.board.IBoard;
 import com.whyx.openchess.interfaces.model.board.ICell;
 import com.whyx.openchess.interfaces.model.board.ILocation;
 import com.whyx.openchess.interfaces.model.game.IGame;
 import com.whyx.openchess.interfaces.model.piece.IPiece;
-import com.whyx.openchess.interfaces.model.rules.IMove;
-import com.whyx.openchess.interfaces.model.rules.IRule;
+import com.whyx.openchess.interfaces.model.rules.IMoveRule;
 import com.whyx.openchess.interfaces.model.rules.IRuleBook;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
@@ -83,28 +81,41 @@ public class GameTest {
             }
 
             @Test
-            void isMoveLegalPieceNotNullTest(@Mock final Move<ILocation> move) {
+            void isMoveLegalPieceNotNullTest(
+                    @Mock final ICell<ILocation> start,
+                    @Mock final ICell<ILocation> destination) {
                 assertThatNullPointerException()
-                        .isThrownBy(() -> game.isMoveLegal(null, move))
+                        .isThrownBy(() -> game.isMoveLegal(null, start, destination))
                         .withMessage("piece must not be null");
             }
 
             @Test
-            void isMoveLegalMoveNotNullTest(@Mock final IPiece<ILocation> piece) {
+            void isMoveLegalStartNotNullTest(
+                    @Mock final IPiece<ILocation> piece,
+                    @Mock final ICell<ILocation> destination
+            ) {
                 assertThatNullPointerException()
-                        .isThrownBy(() -> game.isMoveLegal(piece, null))
-                        .withMessage("move must not be null");
+                        .isThrownBy(() -> game.isMoveLegal(piece, null, destination))
+                        .withMessage("start must not be null");
+            }
+
+            @Test
+            void isMoveLegalDestinationNotNullTest(
+                    @Mock final IPiece<ILocation> piece,
+                    @Mock final ICell<ILocation> start
+            ) {
+                assertThatNullPointerException()
+                        .isThrownBy(() -> game.isMoveLegal(piece, start, null))
+                        .withMessage("destination must not be null");
             }
 
             @Test
             void isMoveLegalStartNotOnBoardTest(
                     @Mock final IPiece<ILocation> piece,
-                    @Mock final IMove<ILocation> move,
-                    @Mock final ICell<ILocation> start
+                    @Mock final ICell<ILocation> start,
+                    @Mock final ICell<ILocation> destination
             ) {
-                given(move.getStart()).willReturn(start);
-
-                assertThatThrownBy(() -> game.isMoveLegal(piece, move))
+                assertThatThrownBy(() -> game.isMoveLegal(piece, start, destination))
                         .isExactlyInstanceOf(CellNotFoundException.class)
                         .hasMessage("cell not found");
             }
@@ -113,12 +124,11 @@ public class GameTest {
             void isMoveLegalDestinationNotOnBoardTest(
                     @Mock final IPiece<ILocation> piece,
                     @Mock final ICell<ILocation> start,
-                    @Mock final IMove<ILocation> move
+                    @Mock final ICell<ILocation> destination
             ) {
-                given(move.getStart()).willReturn(start);
                 given(board.containsCell(start)).willReturn(true);
 
-                assertThatThrownBy(() -> game.isMoveLegal(piece, move))
+                assertThatThrownBy(() -> game.isMoveLegal(piece, start, destination))
                         .isExactlyInstanceOf(CellNotFoundException.class)
                         .hasMessage("cell not found");
             }
@@ -127,15 +137,12 @@ public class GameTest {
             void isMoveLegalPieceNotOnStartTest(
                     @Mock final IPiece<ILocation> piece,
                     @Mock final ICell<ILocation> start,
-                    @Mock final ICell<ILocation> destination,
-                    @Mock final IMove<ILocation> move
+                    @Mock final ICell<ILocation> destination
             ) {
-                given(move.getStart()).willReturn(start);
-                given(move.getDestination()).willReturn(destination);
                 given(board.containsCell(start)).willReturn(true);
                 given(board.containsCell(destination)).willReturn(true);
 
-                assertThatThrownBy(() -> game.isMoveLegal(piece, move))
+                assertThatThrownBy(() -> game.isMoveLegal(piece, start, destination))
                         .isExactlyInstanceOf(PieceNotFoundException.class)
                         .hasMessage("piece not found");
             }
@@ -145,16 +152,13 @@ public class GameTest {
                     @Mock final IPiece<ILocation> piece,
                     @Mock final IPiece<ILocation> wrongPiece,
                     @Mock final ICell<ILocation> start,
-                    @Mock final ICell<ILocation> destination,
-                    @Mock final IMove<ILocation> move
+                    @Mock final ICell<ILocation> destination
             ) {
-                given(move.getStart()).willReturn(start);
-                given(move.getDestination()).willReturn(destination);
                 given(board.containsCell(start)).willReturn(true);
                 given(board.containsCell(destination)).willReturn(true);
                 given(start.getPiece()).willReturn(Optional.of(wrongPiece));
 
-                assertThatThrownBy(() -> game.isMoveLegal(piece, move))
+                assertThatThrownBy(() -> game.isMoveLegal(piece, start, destination))
                         .isExactlyInstanceOf(PieceNotFoundException.class)
                         .hasMessage("piece not found");
             }
@@ -201,32 +205,73 @@ public class GameTest {
     @Nested
     class Functionality {
 
+        @Mock
+        private IBoard<ILocation> board;
+
+        private IGame<ILocation> game;
+
+        @BeforeEach
+        void setup() {
+            game = Game.builder()
+                    .withBoard(board)
+                    .build();
+        }
+
         @Test
         void isMoveLegalReturnsTrueWhenAllRulesSatisfied(
-                @Mock final IRule<ILocation> rule,
+                @Mock final IMoveRule<ILocation> rule,
                 @Mock final IRuleBook<ILocation> ruleBook,
-                @Mock final IMove<ILocation> move,
                 @Mock final ICell<ILocation> start,
                 @Mock final ICell<ILocation> destination,
-                @Mock final IPiece<ILocation> piece,
-                @Mock final IBoard<ILocation> board
+                @Mock final IPiece<ILocation> piece
         ) {
-            final Stream<IRule<ILocation>> ruleStream = Stream.of(rule);
             given(piece.getRuleBook()).willReturn(ruleBook);
-            given(ruleBook.getRules()).willReturn(ruleStream);
-            given(rule.moveConformsToRule(move, piece, board)).willReturn(true);
-            given(move.getStart()).willReturn(start);
-            given(move.getDestination()).willReturn(destination);
+            given(ruleBook.getRules()).willReturn(Stream.of(rule));
+            given(rule.moveConformsToRule(start, destination, piece, board)).willReturn(true);
             given(start.getPiece()).willReturn(Optional.of(piece));
             given(board.containsCell(start)).willReturn(true);
             given(board.containsCell(destination)).willReturn(true);
 
-            final IGame<ILocation> game = Game.builder()
-                    .withBoard(board)
-                    .build();
-
-            assertThat(game.isMoveLegal(piece, move)).isTrue();
+            assertThat(game.isMoveLegal(piece, start, destination)).isTrue();
         }
+
+        @Test
+        void isMoveLegalReturnsFalseIfRuleNotSatisfied(
+                @Mock final IMoveRule<ILocation> rule,
+                @Mock final IRuleBook<ILocation> ruleBook,
+                @Mock final ICell<ILocation> start,
+                @Mock final ICell<ILocation> destination,
+                @Mock final IPiece<ILocation> piece
+        ) {
+            given(piece.getRuleBook()).willReturn(ruleBook);
+            given(ruleBook.getRules()).willReturn(Stream.of(rule));
+            given(rule.moveConformsToRule(start, destination, piece, board)).willReturn(false);
+            given(start.getPiece()).willReturn(Optional.of(piece));
+            given(board.containsCell(start)).willReturn(true);
+            given(board.containsCell(destination)).willReturn(true);
+
+            assertThat(game.isMoveLegal(piece, start, destination)).isFalse();
+        }
+
+        @Test
+        void getPossibleMoveReturnsMoveIfThereExistsPossibleMove(
+                @Mock final IMoveRule<ILocation> rule,
+                @Mock final IRuleBook<ILocation> ruleBook,
+                @Mock final ICell<ILocation> start,
+                @Mock final ICell<ILocation> destination,
+                @Mock final IPiece<ILocation> piece
+        ) {
+            given(piece.getRuleBook()).willReturn(ruleBook);
+            given(ruleBook.getRules()).willReturn(Stream.of(rule));
+            given(rule.moveConformsToRule(start, destination, piece, board)).willReturn(true);
+            given(start.getPiece()).willReturn(Optional.of(piece));
+            given(board.containsCell(start)).willReturn(true);
+            given(board.containsCell(destination)).willReturn(true);
+            given(board.getCells()).willReturn(Stream.of(start, destination));
+
+            assertThat(game.getPossibleMovesFromCell(start).size()).isEqualTo(1);
+        }
+
 
     }
 

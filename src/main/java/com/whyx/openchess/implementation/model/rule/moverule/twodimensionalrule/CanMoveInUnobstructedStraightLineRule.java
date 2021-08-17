@@ -1,10 +1,9 @@
-package com.whyx.openchess.implementation.model.rule.twodimensionalrule;
+package com.whyx.openchess.implementation.model.rule.moverule.twodimensionalrule;
 
 import com.whyx.openchess.implementation.model.board.location.TwoDimensionalLocation;
 import com.whyx.openchess.interfaces.model.board.IBoard;
 import com.whyx.openchess.interfaces.model.board.ICell;
 import com.whyx.openchess.interfaces.model.piece.IPiece;
-import com.whyx.openchess.interfaces.model.rules.IMove;
 
 import java.util.Set;
 import java.util.function.Function;
@@ -18,13 +17,14 @@ import java.util.stream.Collectors;
 public class CanMoveInUnobstructedStraightLineRule extends CanMoveInStraightLineRule {
     @Override
     public boolean moveConformsToRule(
-            final IMove<TwoDimensionalLocation> move,
+            final ICell<TwoDimensionalLocation> start,
+            final ICell<TwoDimensionalLocation> destination,
             final IPiece<TwoDimensionalLocation> piece,
             final IBoard<TwoDimensionalLocation> board) {
-        if (!(super.moveConformsToRule(move, piece, board))) return false;
+        if (!(super.moveConformsToRule(start, destination, piece, board))) return false;
 
         // check whether the destination is in the same column (or row).
-        final boolean sameColumn = move.getStart().getLocation().getX() == move.getDestination().getLocation().getX();
+        final boolean sameColumn = start.getLocation().getX() == destination.getLocation().getX();
 
         // decide based on the boolean which coordinate is remaining constant or changing in the row, or column.
         final Function<ICell<TwoDimensionalLocation>, Integer> getConstantCoordinate = sameColumn ?
@@ -36,12 +36,12 @@ public class CanMoveInUnobstructedStraightLineRule extends CanMoveInStraightLine
 
         // get a set of all the cells between the start and destination.
         final Set<ICell<TwoDimensionalLocation>> intermediateCells = getPiecesBetweenStartAndDestination(
-                move, board, getConstantCoordinate, getChangingCoordinate
+                start, destination, board, getConstantCoordinate, getChangingCoordinate
         );
 
         // calculate the number of cells expected between the two.
         final int distanceBetweenStartAndDestination =
-                Math.abs(getChangingCoordinate.apply(move.getStart()) - getChangingCoordinate.apply(move.getDestination())) - 1;
+                Math.abs(getChangingCoordinate.apply(start) - getChangingCoordinate.apply(destination)) - 1;
 
         return intermediateCells.size() == distanceBetweenStartAndDestination &&
                 intermediateCells.stream().noneMatch(cell -> cell.getPiece().isPresent());
@@ -50,31 +50,33 @@ public class CanMoveInUnobstructedStraightLineRule extends CanMoveInStraightLine
     /**
      * Get the set of pieces belonging in the cells between the start and the destination coordinate.
      *
-     * @param move                  The move being made.
+     * @param start                 The cell the move is being made from.
+     * @param destination           The destination the move is being made to.
      * @param board                 The board the move is being made on.
      * @param getConstantCoordinate Function that gets the constant coordinate, this is x for a column, and y for a row.
      * @param getChangingCoordinate Function that gets the changing coordinate.
      * @return
      */
     private Set<ICell<TwoDimensionalLocation>> getPiecesBetweenStartAndDestination(
-            final IMove<TwoDimensionalLocation> move,
+            final ICell<TwoDimensionalLocation> start,
+            final ICell<TwoDimensionalLocation> destination,
             final IBoard<TwoDimensionalLocation> board,
             final Function<ICell<TwoDimensionalLocation>, Integer> getConstantCoordinate,
             final Function<ICell<TwoDimensionalLocation>, Integer> getChangingCoordinate
     ) {
         // calculate the bounds the coordinates must br within.
         final int smallerCoordinate = Math.min(
-                getChangingCoordinate.apply(move.getStart()),
-                getChangingCoordinate.apply(move.getDestination())
+                getChangingCoordinate.apply(start),
+                getChangingCoordinate.apply(destination)
         );
         final int largerCoordinate = Math.max(
-                getChangingCoordinate.apply(move.getStart()),
-                getChangingCoordinate.apply(move.getDestination())
+                getChangingCoordinate.apply(start),
+                getChangingCoordinate.apply(destination)
         );
 
         // filter the board for the appropriate cells.
         return board.getCells()
-                .filter(cell -> getConstantCoordinate.apply(cell).equals(getConstantCoordinate.apply(move.getStart())))
+                .filter(cell -> getConstantCoordinate.apply(cell).equals(getConstantCoordinate.apply(start)))
                 .filter(cell -> getChangingCoordinate.apply(cell) > smallerCoordinate)
                 .filter(cell -> getChangingCoordinate.apply(cell) < largerCoordinate)
                 .collect(Collectors.toSet());
