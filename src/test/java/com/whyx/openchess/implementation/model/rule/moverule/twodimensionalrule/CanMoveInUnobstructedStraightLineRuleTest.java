@@ -59,7 +59,7 @@ class CanMoveInUnobstructedStraightLineRuleTest {
             given(obstructionLocation.getX()).willReturn(0);
             given(obstructionLocation.getY()).willReturn(1);
             given(obstructionCell.getPiece()).willReturn(Optional.of(obstruction));
-            given(board.getCells()).willReturn(Stream.of(startCell, destinationCell, obstructionCell));
+            given(board.getCells()).will(invocationOnMock -> Stream.of(startCell, destinationCell, obstructionCell));
 
             assertThat(rule.moveConformsToRule(startCell, destinationCell, piece, board)).isFalse();
         }
@@ -86,7 +86,7 @@ class CanMoveInUnobstructedStraightLineRuleTest {
             given(obstructionLocation.getX()).willReturn(0);
             given(obstructionLocation.getY()).willReturn(1);
             given(obstructionCell.getPiece()).willReturn(Optional.empty());
-            given(board.getCells()).willReturn(Stream.of(startCell, destinationCell, obstructionCell));
+            given(board.getCells()).will(invocationOnMock -> Stream.of(startCell, destinationCell, obstructionCell));
 
             assertThat(rule.moveConformsToRule(startCell, destinationCell, piece, board)).isTrue();
         }
@@ -106,7 +106,7 @@ class CanMoveInUnobstructedStraightLineRuleTest {
             given(startLocation.getY()).willReturn(0);
             given(destinationLocation.getX()).willReturn(0);
             given(destinationLocation.getY()).willReturn(2);
-            given(board.getCells()).willReturn(Stream.of(startCell, destinationCell));
+            given(board.getCells()).will(invocationOnMock -> Stream.of(startCell, destinationCell));
 
             assertThat(rule.moveConformsToRule(startCell, destinationCell, piece, board)).isFalse();
         }
@@ -133,7 +133,7 @@ class CanMoveInUnobstructedStraightLineRuleTest {
             given(obstructionLocation.getX()).willReturn(1);
             given(obstructionLocation.getY()).willReturn(0);
             given(obstructionCell.getPiece()).willReturn(Optional.of(obstruction));
-            given(board.getCells()).willReturn(Stream.of(startCell, destinationCell, obstructionCell));
+            given(board.getCells()).will(invocationOnMock -> Stream.of(startCell, destinationCell, obstructionCell));
 
             assertThat(rule.moveConformsToRule(startCell, destinationCell, piece, board)).isFalse();
         }
@@ -160,7 +160,7 @@ class CanMoveInUnobstructedStraightLineRuleTest {
             given(obstructionLocation.getX()).willReturn(1);
             given(obstructionLocation.getY()).willReturn(0);
             given(obstructionCell.getPiece()).willReturn(Optional.empty());
-            given(board.getCells()).willReturn(Stream.of(startCell, destinationCell, obstructionCell));
+            given(board.getCells()).will(invocationOnMock -> Stream.of(startCell, destinationCell, obstructionCell));
 
             assertThat(rule.moveConformsToRule(startCell, destinationCell, piece, board)).isTrue();
         }
@@ -180,7 +180,7 @@ class CanMoveInUnobstructedStraightLineRuleTest {
             given(startLocation.getY()).willReturn(0);
             given(destinationLocation.getX()).willReturn(2);
             given(destinationLocation.getY()).willReturn(0);
-            given(board.getCells()).willReturn(Stream.of(startCell, destinationCell));
+            given(board.getCells()).will(invocationOnMock -> Stream.of(startCell, destinationCell));
 
             assertThat(rule.moveConformsToRule(startCell, destinationCell, piece, board)).isFalse();
         }

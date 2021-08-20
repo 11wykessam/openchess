@@ -205,28 +205,21 @@ public class GameTest {
     @Nested
     class Functionality {
 
-        @Mock
-        private IBoard<ILocation> board;
-
-        private IGame<ILocation> game;
-
-        @BeforeEach
-        void setup() {
-            game = Game.builder()
-                    .withBoard(board)
-                    .build();
-        }
-
         @Test
         void isMoveLegalReturnsTrueWhenAllRulesSatisfied(
+                @Mock final IBoard<ILocation> board,
                 @Mock final IMoveRule<ILocation> rule,
                 @Mock final IRuleBook<ILocation> ruleBook,
                 @Mock final ICell<ILocation> start,
                 @Mock final ICell<ILocation> destination,
                 @Mock final IPiece<ILocation> piece
         ) {
+            final IGame<ILocation> game = Game.builder()
+                    .withBoard(board)
+                    .build();
+
             given(piece.getRuleBook()).willReturn(ruleBook);
-            given(ruleBook.getRules()).willReturn(Stream.of(rule));
+            given(ruleBook.getRules()).will(invocationOnMock -> Stream.of(rule));
             given(rule.moveConformsToRule(start, destination, piece, board)).willReturn(true);
             given(start.getPiece()).willReturn(Optional.of(piece));
             given(board.containsCell(start)).willReturn(true);
@@ -237,14 +230,19 @@ public class GameTest {
 
         @Test
         void isMoveLegalReturnsFalseIfRuleNotSatisfied(
+                @Mock final IBoard<ILocation> board,
                 @Mock final IMoveRule<ILocation> rule,
                 @Mock final IRuleBook<ILocation> ruleBook,
                 @Mock final ICell<ILocation> start,
                 @Mock final ICell<ILocation> destination,
                 @Mock final IPiece<ILocation> piece
         ) {
+            final Game<ILocation> game = Game.builder()
+                    .withBoard(board)
+                    .build();
+
             given(piece.getRuleBook()).willReturn(ruleBook);
-            given(ruleBook.getRules()).willReturn(Stream.of(rule));
+            given(ruleBook.getRules()).will(invocationOnMock -> Stream.of(rule));
             given(rule.moveConformsToRule(start, destination, piece, board)).willReturn(false);
             given(start.getPiece()).willReturn(Optional.of(piece));
             given(board.containsCell(start)).willReturn(true);
@@ -255,19 +253,25 @@ public class GameTest {
 
         @Test
         void getPossibleMoveReturnsMoveIfThereExistsPossibleMove(
+                @Mock final IBoard<ILocation> board,
                 @Mock final IMoveRule<ILocation> rule,
                 @Mock final IRuleBook<ILocation> ruleBook,
                 @Mock final ICell<ILocation> start,
                 @Mock final ICell<ILocation> destination,
                 @Mock final IPiece<ILocation> piece
         ) {
+            final IGame<ILocation> game = Game.builder()
+                    .withBoard(board)
+                    .build();
+
             given(piece.getRuleBook()).willReturn(ruleBook);
-            given(ruleBook.getRules()).willReturn(Stream.of(rule));
+            given(ruleBook.getRules()).will(invocationOnMock -> Stream.of(rule));
             given(rule.moveConformsToRule(start, destination, piece, board)).willReturn(true);
+            given(rule.moveConformsToRule(start, start, piece, board)).willReturn(false);
             given(start.getPiece()).willReturn(Optional.of(piece));
             given(board.containsCell(start)).willReturn(true);
             given(board.containsCell(destination)).willReturn(true);
-            given(board.getCells()).willReturn(Stream.of(start, destination));
+            given(board.getCells()).will(invocationOnMock -> Stream.of(start, destination));
 
             assertThat(game.getPossibleMovesFromCell(start).size()).isEqualTo(1);
         }

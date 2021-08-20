@@ -3,6 +3,7 @@ package com.whyx.openchess.implementation.model.game;
 import com.whyx.openchess.implementation.exceptions.CellNotFoundException;
 import com.whyx.openchess.implementation.exceptions.IllegalMoveException;
 import com.whyx.openchess.implementation.exceptions.PieceNotFoundException;
+import com.whyx.openchess.implementation.model.rule.moverule.Move;
 import com.whyx.openchess.interfaces.model.board.IBoard;
 import com.whyx.openchess.interfaces.model.board.ICell;
 import com.whyx.openchess.interfaces.model.board.ILocation;
@@ -12,6 +13,8 @@ import com.whyx.openchess.interfaces.model.piece.IPiece;
 import com.whyx.openchess.interfaces.model.rules.IMove;
 
 import java.util.Set;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import static java.util.Objects.requireNonNull;
 
@@ -64,7 +67,7 @@ public class Game<T extends ILocation> implements IGame<T> {
         if (start.getPiece().isEmpty() || !start.getPiece().get().equals(piece)) throw new PieceNotFoundException();
 
         return piece.getRuleBook().getRules()
-                .allMatch(rule -> rule.moveConformsToRule(start, destination, piece, this.board));
+                .allMatch(rule -> rule.moveConformsToRule(start, destination, piece, this.getBoard()));
     }
 
     @Override
@@ -86,7 +89,23 @@ public class Game<T extends ILocation> implements IGame<T> {
         if (start.getPiece().isEmpty()) return Set.of();
 
         final IPiece<T> piece = start.getPiece().get();
-        return null;
+        return this.getBoard().getCells()
+                .filter(destination -> this.isMoveLegal(piece, start, destination))
+                .map(combineDestinationWithStart(start))
+                .collect(Collectors.toSet());
+    }
+
+    /**
+     * Returns function that combines two destination with given start cell into a move object.
+     *
+     * @param start {@link ICell} the start cell being combined with the destination.
+     * @return {@link Function}.
+     */
+    private Function<ICell<T>, IMove<T>> combineDestinationWithStart(final ICell<T> start) {
+        return destination -> Move.<T>builder()
+                .withStart(start)
+                .withDestination(destination)
+                .build();
     }
 
     @Override
