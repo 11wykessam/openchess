@@ -48,6 +48,13 @@ public interface IGame<T extends ILocation> {
     IGame<T> makeMove(IPiece<T> piece, IMove<T> move) throws IllegalMoveException;
 
     /**
+     * Gets the set of possible moves on the board.
+     *
+     * @return {@link Set} containing {@link IMove} objects.
+     */
+    Set<IMove<T>> getPossibleMoves();
+
+    /**
      * Get set of possible moves from a given cell.
      *
      * @param cell The {@link ICell} moves are being made from.

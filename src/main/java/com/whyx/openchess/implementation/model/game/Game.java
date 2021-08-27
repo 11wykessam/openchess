@@ -76,6 +76,18 @@ public class Game<T extends ILocation> implements IGame<T> {
     }
 
     /**
+     * Gets the possible moves on the board.
+     *
+     * @return {@link Set} containing {@link IMove} objects.
+     */
+    @Override
+    public Set<IMove<T>> getPossibleMoves() {
+        return this.getBoard().getCells()
+                .flatMap(cell -> getPossibleMovesFromCell(cell).stream())
+                .collect(Collectors.toSet());
+    }
+
+    /**
      * Get the possible moves originating from a given cell.
      *
      * @param start The {@link ICell} moves are being made from.

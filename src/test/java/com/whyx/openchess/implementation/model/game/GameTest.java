@@ -252,6 +252,52 @@ class GameTest {
         }
 
         @Test
+        void getPossibleMovesReturnsMoves(
+                @Mock final IBoard<ILocation> board,
+                @Mock final ICell<ILocation> cell,
+                @Mock final IPiece<ILocation> piece,
+                @Mock final IRuleBook<ILocation> ruleBook
+        ) {
+            final IGame<ILocation> game = Game.builder()
+                    .withBoard(board)
+                    .build();
+
+            given(piece.getRuleBook()).willReturn(ruleBook);
+            given(ruleBook.getRules()).will(invocationOnMock -> Stream.of());
+            given(cell.getPiece()).willReturn(Optional.of(piece));
+            given(board.containsCell(cell)).willReturn(true);
+            given(board.getCells()).will(invocationOnMock -> Stream.of(cell));
+
+            assertThat(game.getPossibleMoves().size()).isEqualTo(1);
+        }
+
+        @Test
+        void getPossibleMovesReturnsNoMovesTest(
+                @Mock final IBoard<ILocation> board,
+                @Mock final ICell<ILocation> cell,
+                @Mock final IPiece<ILocation> piece,
+                @Mock final IRuleBook<ILocation> ruleBook,
+                @Mock final IMoveRule<ILocation> rule,
+                @Mock final ICell<ILocation> start,
+                @Mock final ICell<ILocation> destination
+        ) {
+            final IGame<ILocation> game = Game.builder()
+                    .withBoard(board)
+                    .build();
+
+            given(piece.getRuleBook()).willReturn(ruleBook);
+            given(ruleBook.getRules()).will(invocationOnMock -> Stream.of(rule));
+            given(rule.moveConformsToRule(start, start, piece, board)).willReturn(false);
+            given(rule.moveConformsToRule(start, destination, piece, board)).willReturn(false);
+            given(start.getPiece()).willReturn(Optional.of(piece));
+            given(board.containsCell(start)).willReturn(true);
+            given(board.containsCell(destination)).willReturn(true);
+            given(board.getCells()).will(invocationOnMock -> Stream.of(start, destination));
+
+            assertThat(game.getPossibleMoves()).isEmpty();
+        }
+
+        @Test
         void getPossibleMovesFromCellNoRuleTest(
                 @Mock final IBoard<ILocation> board,
                 @Mock final IRuleBook<ILocation> ruleBook,
