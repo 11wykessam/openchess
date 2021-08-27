@@ -18,7 +18,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  * Class used to test the {@link HasToMoveRule} class.
  */
 @ExtendWith(MockitoExtension.class)
-public class HasToMoveRuleTest {
+class HasToMoveRuleTest {
 
     @Nested
     class Functionality {

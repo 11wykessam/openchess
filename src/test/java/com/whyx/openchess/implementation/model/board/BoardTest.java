@@ -24,7 +24,7 @@ import static org.assertj.core.api.Assumptions.assumeThat;
  * Class used to test the {@link Board} class.
  */
 @ExtendWith(MockitoExtension.class)
-public class BoardTest {
+class BoardTest {
 
     /**
      * @author Sam Wykes.

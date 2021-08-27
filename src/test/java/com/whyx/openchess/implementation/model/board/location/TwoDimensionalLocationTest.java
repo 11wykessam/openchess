@@ -19,7 +19,7 @@ import static org.assertj.core.api.Assumptions.assumeThat;
  * Class responsible for testing the {@link TwoDimensionalLocation} test.
  */
 @ExtendWith(MockitoExtension.class)
-public class TwoDimensionalLocationTest {
+class TwoDimensionalLocationTest {
 
     @Nested
     class Preconditions {

@@ -16,7 +16,7 @@ import static org.assertj.core.api.Assertions.assertThatNullPointerException;
  * Class used to test the {@link King} class.
  */
 @ExtendWith(MockitoExtension.class)
-public class KingTest {
+class KingTest {
 
     @Nested
     class Preconditions {

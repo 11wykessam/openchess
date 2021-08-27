@@ -21,7 +21,7 @@ import static org.assertj.core.api.Assumptions.assumeThat;
  * Class used to test the {@link Move} class.
  */
 @ExtendWith(MockitoExtension.class)
-public class MoveTest {
+class MoveTest {
 
     /**
      * Test the preconditions for the class.

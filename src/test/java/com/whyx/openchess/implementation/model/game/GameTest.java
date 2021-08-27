@@ -29,7 +29,7 @@ import static org.mockito.BDDMockito.given;
  * Class used to test the {@link Game} class.
  */
 @ExtendWith(MockitoExtension.class)
-public class GameTest {
+class GameTest {
 
     /**
      * @author Sam Wykes.
