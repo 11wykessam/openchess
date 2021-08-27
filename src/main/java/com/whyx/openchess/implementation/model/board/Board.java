@@ -55,7 +55,7 @@ public class Board<T extends ILocation> implements IBoard<T> {
         final Set<ICell<T>> alteredCells = this.cells.stream()
                 .map(changeCellPiece(targetCell, piece)).collect(Collectors.toSet());
 
-        // check if anything has been changed.
+        // check if anything has been changed.s
         if (alteredCells.equals(this.cells)) throw new CellNotFoundException();
 
         // construct the new board.
