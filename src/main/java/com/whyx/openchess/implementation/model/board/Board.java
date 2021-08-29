@@ -47,6 +47,7 @@ public class Board<T extends ILocation> implements IBoard<T> {
      */
     @Override
     public IBoard<T> makeMove(final IMove<T> move) {
+        requireNonNull(move, "move must not be null");
         return null;
     }
 
