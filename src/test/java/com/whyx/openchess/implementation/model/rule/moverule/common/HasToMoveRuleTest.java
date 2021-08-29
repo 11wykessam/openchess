@@ -1,9 +1,11 @@
 package com.whyx.openchess.implementation.model.rule.moverule.common;
 
+import com.whyx.openchess.implementation.model.rule.moverule.MoveRuleTest;
 import com.whyx.openchess.interfaces.model.board.IBoard;
 import com.whyx.openchess.interfaces.model.board.ICell;
 import com.whyx.openchess.interfaces.model.board.ILocation;
 import com.whyx.openchess.interfaces.model.piece.IPiece;
+import com.whyx.openchess.interfaces.model.rules.IMoveRule;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -18,7 +20,12 @@ import static org.assertj.core.api.Assertions.assertThat;
  * Class used to test the {@link HasToMoveRule} class.
  */
 @ExtendWith(MockitoExtension.class)
-class HasToMoveRuleTest {
+class HasToMoveRuleTest extends MoveRuleTest<ILocation> {
+
+    @Override
+    protected IMoveRule<ILocation> createRule() {
+        return new HasToMoveRule<>();
+    }
 
     @Nested
     class Functionality {

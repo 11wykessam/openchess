@@ -1,9 +1,11 @@
 package com.whyx.openchess.implementation.model.rule.moverule.twodimensionalrule;
 
 import com.whyx.openchess.implementation.model.board.location.TwoDimensionalLocation;
+import com.whyx.openchess.implementation.model.rule.moverule.MoveRuleTest;
 import com.whyx.openchess.interfaces.model.board.IBoard;
 import com.whyx.openchess.interfaces.model.board.ICell;
 import com.whyx.openchess.interfaces.model.piece.IPiece;
+import com.whyx.openchess.interfaces.model.rules.IMoveRule;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -24,7 +26,12 @@ import static org.mockito.BDDMockito.given;
  * Class used to test the {@link CanMoveToAdjacentTwoDimensionalLocationRule}.
  */
 @ExtendWith(MockitoExtension.class)
-class CanMoveToAdjacentTwoDimensionalLocationRuleTest {
+class CanMoveToAdjacentTwoDimensionalLocationRuleTest extends MoveRuleTest<TwoDimensionalLocation> {
+
+    @Override
+    protected IMoveRule<TwoDimensionalLocation> createRule() {
+        return new CanMoveToAdjacentTwoDimensionalLocationRule();
+    }
 
     @Nested
     class Functionality {
