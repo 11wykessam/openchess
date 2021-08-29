@@ -78,6 +78,13 @@ class BoardTest {
             }
 
             @Test
+            void makeMoveMoveNotNullTest() {
+                assertThatNullPointerException()
+                        .isThrownBy(() -> board.makeMove(null))
+                        .withMessage("move must not be null");
+            }
+
+            @Test
             void placePieceCellNotNullTest() {
                 assertThatNullPointerException()
                         .isThrownBy(() -> board.placePieceOnCell(null, piece))

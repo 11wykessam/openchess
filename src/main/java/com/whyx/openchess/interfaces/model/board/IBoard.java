@@ -2,6 +2,7 @@ package com.whyx.openchess.interfaces.model.board;
 
 import com.whyx.openchess.implementation.exceptions.CellNotFoundException;
 import com.whyx.openchess.interfaces.model.piece.IPiece;
+import com.whyx.openchess.interfaces.model.rules.IMove;
 
 import java.util.Iterator;
 import java.util.stream.Stream;
@@ -19,6 +20,14 @@ public interface IBoard<T extends ILocation> {
      * @return {@link Iterator} containing8 {@link ICell} objects.
      */
     Stream<ICell<T>> getCells();
+
+    /**
+     * Make a given move.
+     *
+     * @param move The {@link IMove} being made.
+     * @return The resultant {@link IBoard} object.
+     */
+    IBoard<T> makeMove(IMove<T> move);
 
     /**
      * Place a given piece on a cell.

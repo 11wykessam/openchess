@@ -40,12 +40,11 @@ public interface IGame<T extends ILocation> {
     /**
      * Make a move.
      *
-     * @param piece The {@link IPiece} being moved.
-     * @param move  The {@link IMove} being made.
+     * @param move The {@link IMove} being made.
      * @return The resultant {@link IGame}.
      * @throws IllegalMoveException Thrown if the move being made is illegal.
      */
-    IGame<T> makeMove(IPiece<T> piece, IMove<T> move) throws IllegalMoveException;
+    IGame<T> makeMove(IMove<T> move) throws IllegalMoveException;
 
     /**
      * Gets the set of possible moves on the board.

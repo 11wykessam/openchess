@@ -5,6 +5,7 @@ import com.whyx.openchess.interfaces.model.board.IBoard;
 import com.whyx.openchess.interfaces.model.board.ICell;
 import com.whyx.openchess.interfaces.model.board.ILocation;
 import com.whyx.openchess.interfaces.model.piece.IPiece;
+import com.whyx.openchess.interfaces.model.rules.IMove;
 
 import java.util.Set;
 import java.util.function.Function;
@@ -36,6 +37,17 @@ public class Board<T extends ILocation> implements IBoard<T> {
     @Override
     public Stream<ICell<T>> getCells() {
         return cells.stream();
+    }
+
+    /**
+     * Make a move.
+     *
+     * @param move The {@link IMove} being made.
+     * @return The resultant {@link IBoard} object.s
+     */
+    @Override
+    public IBoard<T> makeMove(final IMove<T> move) {
+        return null;
     }
 
     /**

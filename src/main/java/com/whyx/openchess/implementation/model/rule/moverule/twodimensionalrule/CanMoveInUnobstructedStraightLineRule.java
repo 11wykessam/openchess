@@ -9,6 +9,8 @@ import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import static java.util.Objects.requireNonNull;
+
 /**
  * @author Sam Wykes.
  * Class represents a rule where pieces can move in straight lines and that those lines do not contain any obstructions.
@@ -21,6 +23,11 @@ public class CanMoveInUnobstructedStraightLineRule extends CanMoveInStraightLine
             final ICell<TwoDimensionalLocation> destination,
             final IPiece<TwoDimensionalLocation> piece,
             final IBoard<TwoDimensionalLocation> board) {
+        requireNonNull(start, "start must not be null");
+        requireNonNull(destination, "destination must not be null");
+        requireNonNull(piece, "piece must not be null");
+        requireNonNull(board, "board must not be null");
+
         if (!(super.moveConformsToRule(start, destination, piece, board))) return false;
 
         // check whether the destination is in the same column (or row).

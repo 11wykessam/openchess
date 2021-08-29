@@ -70,8 +70,16 @@ public class Game<T extends ILocation> implements IGame<T> {
                 .allMatch(rule -> rule.moveConformsToRule(start, destination, piece, this.getBoard()));
     }
 
+    /**
+     * Makes a move in the game.
+     *
+     * @param move The {@link IMove} being made.
+     * @return The {@link IGame} object resulting from the move being made.
+     * @throws IllegalMoveException Thrown if the move is illegal.
+     */
     @Override
-    public IGame<T> makeMove(final IPiece<T> piece, final IMove<T> move) throws IllegalMoveException {
+    public IGame<T> makeMove(final IMove<T> move) throws IllegalMoveException {
+        requireNonNull(move, "move must not be null");
         return null;
     }
 
@@ -96,6 +104,8 @@ public class Game<T extends ILocation> implements IGame<T> {
      */
     @Override
     public Set<IMove<T>> getPossibleMovesFromCell(final ICell<T> start) throws CellNotFoundException {
+        // ensure cell is not null.
+        requireNonNull(start, "start must not be null");
 
         // check if cell has a piece.
         if (start.getPiece().isEmpty()) return Set.of();

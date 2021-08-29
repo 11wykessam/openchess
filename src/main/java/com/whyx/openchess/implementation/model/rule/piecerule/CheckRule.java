@@ -9,6 +9,8 @@ import com.whyx.openchess.interfaces.model.rules.IPieceRule;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
+import static java.util.Objects.requireNonNull;
+
 /**
  * @param <T> The type of location being played on.
  * @author Sam Wykes.
@@ -17,6 +19,9 @@ import java.util.function.Predicate;
 public class CheckRule<T extends ILocation> implements IPieceRule<T> {
     @Override
     public boolean pieceConformsToRule(final IPiece<T> piece, final IGame<T> game) {
+        requireNonNull(piece, "piece must not be null");
+        requireNonNull(game, "game must not be null");
+
         // get the stream of available moves.
         return game.getPossibleMoves().stream()
                 .anyMatch(filterMovesThatEndOnPiece(piece));
