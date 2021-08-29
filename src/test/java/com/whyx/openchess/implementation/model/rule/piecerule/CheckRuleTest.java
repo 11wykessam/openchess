@@ -1,12 +1,10 @@
 package com.whyx.openchess.implementation.model.rule.piecerule;
 
-import com.whyx.openchess.interfaces.model.board.IBoard;
 import com.whyx.openchess.interfaces.model.board.ICell;
 import com.whyx.openchess.interfaces.model.board.ILocation;
 import com.whyx.openchess.interfaces.model.game.IGame;
 import com.whyx.openchess.interfaces.model.piece.IPiece;
-import com.whyx.openchess.interfaces.model.rules.IMoveRule;
-import com.whyx.openchess.interfaces.model.rules.IRuleBook;
+import com.whyx.openchess.interfaces.model.rules.IMove;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -15,7 +13,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
-import java.util.stream.Stream;
+import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
@@ -40,31 +38,29 @@ class CheckRuleTest {
         @Test
         void checkRuleTrueIfPieceCanBeTakenTest(
                 @Mock final IGame<ILocation> game,
-                @Mock final IBoard<ILocation> board,
-                @Mock final ICell<ILocation> pieceCell,
-                @Mock final IPiece<ILocation> piece,
-                @Mock final IRuleBook<ILocation> pieceRuleBook,
-                @Mock final ICell<ILocation> opponentCell,
-                @Mock final IPiece<ILocation> opponent,
-                @Mock final IRuleBook<ILocation> opponentRuleBook,
-                @Mock final IMoveRule<ILocation> opponentRule
+                @Mock final IMove<ILocation> possibleMove,
+                @Mock final ICell<ILocation> destination,
+                @Mock final IPiece<ILocation> piece
         ) {
-            given(game.getBoard()).willReturn(board);
-            given(board.containsCell(pieceCell)).willReturn(true);
-            given(board.containsCell(opponentCell)).willReturn(true);
-            given(board.getCells()).will(invocationOnMock -> Stream.of(pieceCell, opponentCell));
-
-            given(pieceCell.getPiece()).willReturn(Optional.of(piece));
-            given(piece.getRuleBook()).willReturn(pieceRuleBook);
-            given(pieceRuleBook.getRules()).will(invocationOnMock -> Stream.of());
-
-            given(opponentCell.getPiece()).willReturn(Optional.of(opponent));
-            given(opponent.getRuleBook()).willReturn(opponentRuleBook);
-            given(opponentRuleBook.getRules()).will(invocationOnMock -> Stream.of(opponentRule));
-
-            given(opponentRule.moveConformsToRule(opponentCell, pieceCell, opponent, board)).willReturn(true);
+            given(game.getPossibleMoves()).willReturn(Set.of(possibleMove));
+            given(possibleMove.getDestination()).willReturn(destination);
+            given(destination.getPiece()).willReturn(Optional.of(piece));
 
             assertThat(rule.pieceConformsToRule(piece, game)).isTrue();
+        }
+
+        @Test
+        void checkRuleFalseIfPieceCannotBeTakenTest(
+                @Mock final IGame<ILocation> game,
+                @Mock final IMove<ILocation> possibleMove,
+                @Mock final ICell<ILocation> destination,
+                @Mock final IPiece<ILocation> piece
+        ) {
+            given(game.getPossibleMoves()).willReturn(Set.of(possibleMove));
+            given(possibleMove.getDestination()).willReturn(destination);
+            given(destination.getPiece()).willReturn(Optional.empty());
+
+            assertThat(rule.pieceConformsToRule(piece, game)).isFalse();
         }
 
     }
