@@ -1,5 +1,7 @@
 package com.whyx.openchess.implementation.model.board;
 
+import com.whyx.openchess.implementation.exceptions.CellOccupiedException;
+import com.whyx.openchess.implementation.exceptions.PieceNotFoundException;
 import com.whyx.openchess.interfaces.model.board.ICell;
 import com.whyx.openchess.interfaces.model.board.ILocation;
 import com.whyx.openchess.interfaces.model.piece.IPiece;
@@ -44,6 +46,42 @@ public class Cell<T extends ILocation> implements ICell<T> {
     @Override
     public T getLocation() {
         return this.location;
+    }
+
+    /**
+     * Place a piece on the cell.
+     *
+     * @param piece The {@link IPiece} being placed.
+     * @return Resultant {@link ICell} object.
+     * @throws CellOccupiedException thrown if the cell is already occupied.
+     */
+    @Override
+    public ICell<T> placePiece(final IPiece<T> piece) throws CellOccupiedException {
+        requireNonNull(piece, "piece must not be null");
+
+        // check that the cell isn't occupied.
+        if (this.piece != null) throw new CellOccupiedException();
+
+        return Cell.<T>builder()
+                .withLocation(this.location)
+                .withPiece(piece)
+                .build();
+    }
+
+    /**
+     * Remove piece from the cell.
+     *
+     * @return Resultant {@link ICell} object.
+     * @throws PieceNotFoundException thrown if there is no piece on the cell.
+     */
+    @Override
+    public ICell<T> removePiece() throws PieceNotFoundException {
+        // check that a cell is present.
+        if (this.piece == null) throw new PieceNotFoundException();
+
+        return Cell.<T>builder()
+                .withLocation(location)
+                .build();
     }
 
     /**

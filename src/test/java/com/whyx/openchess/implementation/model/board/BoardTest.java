@@ -5,6 +5,7 @@ import com.whyx.openchess.interfaces.model.board.IBoard;
 import com.whyx.openchess.interfaces.model.board.ICell;
 import com.whyx.openchess.interfaces.model.board.ILocation;
 import com.whyx.openchess.interfaces.model.piece.IPiece;
+import com.whyx.openchess.interfaces.model.rules.IMove;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -12,12 +13,14 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 import static com.whyx.openchess.implementation.model.board.Board.BoardBuilder;
 import static org.assertj.core.api.Assertions.*;
 import static org.assertj.core.api.Assumptions.assumeThat;
+import static org.mockito.BDDMockito.given;
 
 /**
  * @author Sam Wykes.
@@ -160,45 +163,75 @@ class BoardTest {
     class Functionality {
 
         @Test
-        void placePieceChangesBoardTest(
-                @Mock final IPiece<ILocation> piece,
-                @Mock final ILocation locationOne,
-                @Mock final ILocation locationTwo
+        void makeMoveChangesBoardTest(
+                @Mock final IMove<ILocation> move,
+                @Mock final ICell<ILocation> start,
+                @Mock final ICell<ILocation> destination,
+                @Mock final IPiece<ILocation> piece
         ) {
-            final ICell<ILocation> cellOne = Cell.builder()
-                    .withLocation(locationOne)
-                    .build();
-            final ICell<ILocation> cellTwo = Cell.builder()
-                    .withLocation(locationTwo)
-                    .build();
+            given(move.getStart()).willReturn(start);
+            given(move.getDestination()).willReturn(destination);
+            given(start.getPiece()).willReturn(Optional.of(piece));
+            given(destination.getPiece()).willReturn(Optional.empty());
+
             final IBoard<ILocation> board = Board.builder()
-                    .withCells(Set.of(cellOne, cellTwo))
+                    .withCells(Set.of(start, destination))
                     .build();
 
-            final IBoard<ILocation> altered = board.placePieceOnCell(cellOne, piece);
+            final IBoard<ILocation> altered = board.makeMove(move);
+
+            assertThat(board).isNotEqualTo(altered);
+        }
+
+        @Test
+        void placePieceChangesBoardTest(
+                @Mock final ICell<ILocation> cell,
+                @Mock final ILocation location,
+                @Mock final IPiece<ILocation> piece
+        ) {
+            given(cell.getLocation()).willReturn(location);
+
+            final IBoard<ILocation> board = Board.builder()
+                    .withCells(Set.of(cell))
+                    .build();
+
+            final IBoard<ILocation> altered = board.placePieceOnCell(cell, piece);
 
             assertThat(altered).isNotEqualTo(board);
         }
 
         @Test
         void placePieceBoardNotNullTest(
+                @Mock final ICell<ILocation> cell,
                 @Mock final IPiece<ILocation> piece,
-                @Mock final ILocation locationOne,
-                @Mock final ILocation locationTwo
+                @Mock final ILocation location
         ) {
-            final ICell<ILocation> cellOne = Cell.builder()
-                    .withLocation(locationOne)
-                    .build();
-            final ICell<ILocation> cellTwo = Cell.builder()
-                    .withLocation(locationTwo)
-                    .build();
+            given(cell.getLocation()).willReturn(location);
+
             final IBoard<ILocation> board = Board.builder()
-                    .withCells(Set.of(cellOne, cellTwo))
+                    .withCells(Set.of(cell))
                     .build();
 
-            final IBoard<ILocation> altered = board.placePieceOnCell(cellOne, piece);
+            final IBoard<ILocation> altered = board.placePieceOnCell(cell, piece);
 
             assertThat(altered).isNotNull();
+        }
+
+        @Test
+        void placePieceActuallyPlacesPieceTest(
+                @Mock final ICell<ILocation> cell,
+                @Mock final IPiece<ILocation> piece,
+                @Mock final ILocation location
+        ) {
+            given(cell.getLocation()).willReturn(location);
+
+            final IBoard<ILocation> board = Board.builder()
+                    .withCells(Set.of(cell))
+                    .build();
+
+            final IBoard<ILocation> altered = board.placePieceOnCell(cell, piece);
+
+            assertThat(altered.getCells().findFirst().get().getPiece().get()).isEqualTo(piece);
         }
 
         @Test

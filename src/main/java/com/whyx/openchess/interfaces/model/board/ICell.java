@@ -1,5 +1,7 @@
 package com.whyx.openchess.interfaces.model.board;
 
+import com.whyx.openchess.implementation.exceptions.CellOccupiedException;
+import com.whyx.openchess.implementation.exceptions.PieceNotFoundException;
 import com.whyx.openchess.interfaces.model.piece.IPiece;
 
 import java.util.Optional;
@@ -24,5 +26,20 @@ public interface ICell<T extends ILocation> {
      * @return {@link ILocation} object.
      */
     T getLocation();
+
+    /**
+     * Place a piece onto the cell.
+     *
+     * @param piece The {@link IPiece} being placed.
+     * @return Newly created {@link ICell} object.
+     */
+    ICell<T> placePiece(IPiece<T> piece) throws CellOccupiedException;
+
+    /**
+     * Removes any piece from the cell.
+     *
+     * @return Newly created {@link ICell} object.
+     */
+    ICell<T> removePiece() throws PieceNotFoundException;
 
 }

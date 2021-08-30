@@ -66,7 +66,7 @@ public class Board<T extends ILocation> implements IBoard<T> {
 
         // change the cell that needs the piece placed on it.
         final Set<ICell<T>> alteredCells = this.cells.stream()
-                .map(changeCellPiece(targetCell, piece)).collect(Collectors.toSet());
+                .map(addPieceToCellIfMatchesTarget(targetCell, piece)).collect(Collectors.toSet());
 
         // check if anything has been changed.s
         if (alteredCells.equals(this.cells)) throw new CellNotFoundException();
@@ -84,7 +84,7 @@ public class Board<T extends ILocation> implements IBoard<T> {
      * @param piece      The {@link IPiece} object being placed on the cell.
      * @return {@link Function} mapping {@link ICell} objects to {@link ICell} objects.
      */
-    private Function<ICell<T>, ICell<T>> changeCellPiece(final ICell<T> targetCell, final IPiece<T> piece) {
+    private Function<ICell<T>, ICell<T>> addPieceToCellIfMatchesTarget(final ICell<T> targetCell, final IPiece<T> piece) {
         return cell -> cell.equals(targetCell) ?
                 Cell.<T>builder()
                         // if the cell is the target construct a new cell with the piece on it.
@@ -94,6 +94,12 @@ public class Board<T extends ILocation> implements IBoard<T> {
                 // otherwise, map it to itself.
                 cell;
     }
+
+//    private Function<ICell<T>, ICell<T>> removePieceFromCellIfMatchesTarget(final ICell<T> targetCell) {
+//        return cell -> cell.equals(targetCell) ?
+//                Cell.<T>builder()
+//                        // if the cell is the target construct new cell with no piece.
+//    }
 
     /**
      * Check whether a given cell is on the board.
