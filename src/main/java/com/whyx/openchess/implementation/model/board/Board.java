@@ -86,20 +86,19 @@ public class Board<T extends ILocation> implements IBoard<T> {
      */
     private Function<ICell<T>, ICell<T>> addPieceToCellIfMatchesTarget(final ICell<T> targetCell, final IPiece<T> piece) {
         return cell -> cell.equals(targetCell) ?
-                Cell.<T>builder()
-                        // if the cell is the target construct a new cell with the piece on it.
-                        .withLocation(cell.getLocation())
-                        .withPiece(piece)
-                        .build() :
+                // if the cell is the target place a piece on it.
+                cell.placePiece(piece) :
                 // otherwise, map it to itself.
                 cell;
     }
 
-//    private Function<ICell<T>, ICell<T>> removePieceFromCellIfMatchesTarget(final ICell<T> targetCell) {
-//        return cell -> cell.equals(targetCell) ?
-//                Cell.<T>builder()
-//                        // if the cell is the target construct new cell with no piece.
-//    }
+    private Function<ICell<T>, ICell<T>> removePieceFromCellIfMatchesTarget(final ICell<T> targetCell) {
+        return cell -> cell.equals(targetCell) ?
+                // if the cell is the target remove a piece from it.
+                cell.removePiece() :
+                // otherwise, map it to itself.
+                cell;
+    }
 
     /**
      * Check whether a given cell is on the board.
