@@ -115,9 +115,9 @@ class GameTest {
                     @Mock final ICell<ILocation> start,
                     @Mock final ICell<ILocation> destination
             ) {
-                assertThatThrownBy(() -> game.isMoveLegal(piece, start, destination))
-                        .isExactlyInstanceOf(CellNotFoundException.class)
-                        .hasMessage("cell not found");
+                assertThatExceptionOfType(CellNotFoundException.class)
+                        .isThrownBy(() -> game.isMoveLegal(piece, start, destination))
+                        .withMessage("cell not found");
             }
 
             @Test
@@ -128,9 +128,9 @@ class GameTest {
             ) {
                 given(board.containsCell(start)).willReturn(true);
 
-                assertThatThrownBy(() -> game.isMoveLegal(piece, start, destination))
-                        .isExactlyInstanceOf(CellNotFoundException.class)
-                        .hasMessage("cell not found");
+                assertThatExceptionOfType(CellNotFoundException.class)
+                        .isThrownBy(() -> game.isMoveLegal(piece, start, destination))
+                        .withMessage("cell not found");
             }
 
             @Test
@@ -142,9 +142,9 @@ class GameTest {
                 given(board.containsCell(start)).willReturn(true);
                 given(board.containsCell(destination)).willReturn(true);
 
-                assertThatThrownBy(() -> game.isMoveLegal(piece, start, destination))
-                        .isExactlyInstanceOf(PieceNotFoundException.class)
-                        .hasMessage("piece not found");
+                assertThatExceptionOfType(PieceNotFoundException.class)
+                        .isThrownBy(() -> game.isMoveLegal(piece, start, destination))
+                        .withMessage("piece not found");
             }
 
             @Test
@@ -158,9 +158,23 @@ class GameTest {
                 given(board.containsCell(destination)).willReturn(true);
                 given(start.getPiece()).willReturn(Optional.of(wrongPiece));
 
-                assertThatThrownBy(() -> game.isMoveLegal(piece, start, destination))
-                        .isExactlyInstanceOf(PieceNotFoundException.class)
-                        .hasMessage("piece not found");
+                assertThatExceptionOfType(PieceNotFoundException.class)
+                        .isThrownBy(() -> game.isMoveLegal(piece, start, destination))
+                        .withMessage("piece not found");
+            }
+
+            @Test
+            void makeMoveMoveNotNullTest() {
+                assertThatNullPointerException()
+                        .isThrownBy(() -> game.makeMove(null))
+                        .withMessage("move must not be null");
+            }
+
+            @Test
+            void getPossibleMovesFromCellCellNotNullTest() {
+                assertThatNullPointerException()
+                        .isThrownBy(() -> game.getPossibleMovesFromCell(null))
+                        .withMessage("start must not be null");
             }
         }
 
